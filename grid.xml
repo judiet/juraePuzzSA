@@ -1,0 +1,11 @@
+<grid size="3">
+    <cell row="0" col="0"> 6 </cell>
+    <cell row="0" col="1"> 7 </cell>
+    <cell row="0" col="2"> 2 </cell>
+    <cell row="1" col="0"> 8 </cell>
+    <cell row="1" col="1"> 5 </cell>
+    <cell row="1" col="2"> 4 </cell>
+    <cell row="2" col="0"> 0 </cell>
+    <cell row="2" col="1"> 1 </cell>
+    <cell row="2" col="2"> 3 </cell>
+</grid>
