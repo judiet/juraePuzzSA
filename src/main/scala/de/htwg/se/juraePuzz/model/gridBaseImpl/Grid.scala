@@ -61,17 +61,11 @@ class Grid @Inject() (@Named("DefaultSize")size:Int) extends GridInterface {
 
   def checkMove(xS:Int, yS:Int, xT:Int, yT:Int): Boolean = {
 
-    if (xS >= matrix.size ||
-      xT >= matrix.size ||
-      yS >= matrix.size ||
-      yT >= matrix.size) {
+    if (xS >= matrix.size || xT >= matrix.size || yS >= matrix.size || yT >= matrix.size) {
       return false
     }
 
-    if (xS < 0 ||
-    yS < 0 ||
-    xT < 0 ||
-    yT <0) {
+    if (xS < 0 || yS < 0 || xT < 0 || yT <0) {
       return false
     }
 
@@ -99,6 +93,7 @@ class Grid @Inject() (@Named("DefaultSize")size:Int) extends GridInterface {
     }
    false
   }
+
   def getLevel(): Level = {
     val size = matrix.size
     var sb = Array.ofDim[Int](size * size)

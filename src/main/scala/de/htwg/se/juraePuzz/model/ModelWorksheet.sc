@@ -98,7 +98,7 @@ class Solver (g:Grid,l:Level){
   def check_level(): Boolean ={
     if(l.length() == solve().length()){
       println("l "+l.s)
-      println("solöe "+solve().s)
+      println("solve "+solve().s)
       l.s.equals(solve().s)
     }else{
       false
