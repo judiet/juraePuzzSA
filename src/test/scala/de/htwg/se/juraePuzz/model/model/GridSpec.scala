@@ -14,42 +14,42 @@ class GridSpec extends WordSpec with Matchers {
       }
       "have Pieces" in {
         g.empty()
-        g.matrix.get(0, 0) should be(Piece(0, Rotation(0)))
-        g.matrix.get(0, 1) should be(Piece(0, Rotation(0)))
-        g.matrix.get(1, 0) should be(Piece(0, Rotation(0)))
-        g.matrix.get(1, 1) should be(Piece(0, Rotation(0)))
+        g.matrix.cell(0, 0) should be (Piece(0))
+        g.matrix.cell(0, 1) should be(Piece(0))
+        g.matrix.cell(1, 0) should be(Piece(0))
+        g.matrix.cell(1, 1) should be(Piece(0))
       }
 
       "have Curves" in {
         for (i <- 0 until g.getSize(); j <- 0 until g.getSize()){
-          g.matrix.fill(Piece(1, Rotation(0)), i, j)
+          g.set(i, j,1)
         }
-        g.matrix.get(0, 0) should be(Piece(1, Rotation(0)))
-        g.matrix.get(0, 1) should be(Piece(1, Rotation(0)))
-        g.matrix.get(1, 0) should be(Piece(1, Rotation(0)))
-        g.matrix.get(1, 1) should be(Piece(1, Rotation(0)))
+        g.matrix.cell(0, 0) should be(Piece(1))
+        g.matrix.cell(0, 1) should be(Piece(1))
+        g.matrix.cell(1, 0) should be(Piece(1))
+        g.matrix.cell(1, 1) should be(Piece(1))
       }
       "be edited" in {
         g.empty()
-        g.fill(Piece(1, Rotation(0)), 1, 1)
+        g.set( 1, 1,1)
         g.checkMove(1, 1, 1, 0) should be(true)
         g.checkMove(0, 0, 1, 1) should be(false)
         g.checkMove(1, 1, 0, 1) should be(true)
         g.checkMove(2, 1, 2, 0) should be(false)
-        g.fill(Piece(0, Rotation(0)), 0, 0)
+        g.set( 0, 0,0)
         g.checkMove(0, 0, 0, 1) should be(false)
         g.checkMove(1, 1, 0, 0) should be(false)
       }
       "move correct" in {
         g.empty()
-        g.fill(Piece(1, Rotation(0)), 0, 0)
+        g.set( 0, 0,1)
         g.move(0, 0, 0, 1)
-        g.matrix.get(0,0) should be(Piece(0, Rotation(0)))
-        g.matrix.get(0, 1) should be (Piece(1, Rotation(0)))
+        g.matrix.cell(0,0) should be(Piece(0))
+        g.matrix.cell(0, 1) should be (Piece(1))
         g.move(0,0, 1,0) should be (false)
         g.move(0, 0, 1, -1) should be (false)
       }
-      "generateGrid with Level" in {
+      /*"generateGrid with Level" in {
         g.fill(Level(Array(1,2,3,4))) should be (true)
         g.matrix.get(0,0).s should be (1)
         g.matrix.get(0,1).s should be (2)
@@ -59,9 +59,10 @@ class GridSpec extends WordSpec with Matchers {
       "not be filled with illegal Levelsize" in {
         g.fill(Level(Array(1,2,3,4,5))) should be(false)
       }
+      */
       "a string representation" in {
         val grid = new Grid(2)
-        grid.toString() should be ("00\n00\n")
+      grid.toString() should be ("00\n00\n")
       }
     }
 }

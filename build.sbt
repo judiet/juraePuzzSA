@@ -1,4 +1,4 @@
-name          := "juraePuzz"
+name          := "juraePuzzSA"
 organization  := "de.htwg.se"
 version       := "0.14.0"
 scalaVersion  := "2.12.7"

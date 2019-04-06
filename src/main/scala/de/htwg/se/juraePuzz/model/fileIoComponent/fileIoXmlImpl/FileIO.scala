@@ -30,7 +30,7 @@ class FileIO extends FileIOInterface {
           val row: Int = (cell \ "@row").text.toInt
           val col: Int = (cell \ "@col").text.toInt
           val value: Int = cell.text.trim.toInt
-          _grid.fill(Piece(value, Rotation(0)),row, col)
+          _grid.set(row, col,value)
         }
         gridOption = Some(_grid)
       }
@@ -54,11 +54,11 @@ class FileIO extends FileIOInterface {
     pw.close
   }
   def gridToXml(grid:GridInterface) = {
-    <grid size ={grid.getSize().toString}>
+    <grid size ={grid.size.toString}>
       {
       for {
-        row <- 0 until grid.getSize()
-        col <- 0 until grid.getSize()
+        row <- 0 until grid.size
+        col <- 0 until grid.size
       } yield cellToXml(grid, row, col)
       }
     </grid>
@@ -66,7 +66,7 @@ class FileIO extends FileIOInterface {
 
   def cellToXml(grid:GridInterface, row:Int, col:Int) ={
     <cell row ={row.toString} col={col.toString}>
-      {grid.getMatrix.get(row,col).s}
+      {grid.cell(row,col).value}
     </cell>
   }
 

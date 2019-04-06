@@ -1,10 +1,10 @@
 package de.htwg.se.juraePuzz.controller.ControllerMockImpl
 
 import de.htwg.se.juraePuzz.controller.{ControllerInterface, GameStatus}
-import de.htwg.se.juraePuzz.model.gridBaseImpl.{Grid, Level, Matrix}
+import de.htwg.se.juraePuzz.model.gridBaseImpl.{Grid, Level, Matrix, Piece}
 
 class Controller(var grid: Grid) extends ControllerInterface{
-  override def create_empty_grid(): Unit = {}
+  override def createEmptyGrid(): Unit = {}
 
   override def toggleShow(): Unit = {}
 
@@ -30,7 +30,9 @@ class Controller(var grid: Grid) extends ControllerInterface{
 
   override def gridSize = 4
 
-  override def gridMatrix = Matrix(4)
-
   override def gameStatus = GameStatus.IDLE
+
+  override def isSet(row: Int, col: Int): Boolean = true
+
+  override def cell(row: Int, col: Int): Piece = Piece(0)
 }

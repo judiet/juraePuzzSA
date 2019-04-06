@@ -8,21 +8,27 @@ trait GridInterface extends Publisher {
 
   def empty(): Unit
 
-  def getSize():Int
+  def size: Int
 
   override def toString(): String
 
-  def fill(p:Piece, row:Int, col:Int): Unit
+  def set(row: Int, col: Int, value: Int): GridInterface
 
-  def fill(l:Level): Boolean
+  def cell(row: Int, col: Int): Piece
 
-  def move(xS:Int, yS:Int, xT:Int, yT:Int): Boolean
+  //def fill(p:Piece, row:Int, col:Int): Unit
 
-  def checkMove(xS:Int, yS:Int, xT:Int, yT:Int): Boolean
+  //def fill(l:Level): Boolean
+
+  //def fill(grid: GridInterface) : GridInterface
+
+  def move(xS: Int, yS: Int, xT: Int, yT: Int): Boolean
+
+  def checkMove(xS: Int, yS: Int, xT: Int, yT: Int): Boolean
 
   def getLevel(): Level
 
   def solve(): Unit
 
-  def getMatrix(): Matrix
+  def createNewGrid: GridInterface
 }

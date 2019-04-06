@@ -30,7 +30,7 @@ class FileIO extends FileIOInterface {
           val row = (json \\ "row") (index).as[Int]
           val col = (json \\ "col") (index).as[Int]
           val value = (json \\ "value") (index).as[Int]
-          _grid.fill(Piece(value, Rotation(0)),row, col)
+          _grid.set(row, col,value)
         }
         gridOption=Some(_grid)
       }
@@ -49,18 +49,17 @@ class FileIO extends FileIOInterface {
   def gridToJson(grid: GridInterface) = {
     Json.obj(
       "grid" -> Json.obj(
-        "size" -> JsNumber(grid.getSize()),
+        "size" -> JsNumber(grid.size)),
         "cells" -> Json.toJson(
-          for {row <- 0 until grid.getSize();
-               col <- 0 until grid.getSize()} yield {
+          for {row <- 0 until grid.size;
+               col <- 0 until grid.size} yield {
             Json.obj(
               "row" -> row,
               "col" -> col,
-              "value" -> JsNumber(grid.getMatrix().get(row, col).s))
+              "value" -> JsNumber(grid.cell(row, col).value))
           }
         )
       )
-    )
   }
 
 }

@@ -1,3 +1,6 @@
 package de.htwg.se.juraePuzz.model.gridBaseImpl
 
-case class Piece(s:Int,r:Rotation)
+case class Piece(value:Int){
+  def isSet: Boolean = value != 0
+
+}

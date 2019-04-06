@@ -2,13 +2,13 @@ package de.htwg.se.juraePuzz.controller
 
 
 import de.htwg.se.juraePuzz.controller.GameStatus.GameStatus
-import de.htwg.se.juraePuzz.model.gridBaseImpl.{Grid, Level, Matrix}
+import de.htwg.se.juraePuzz.model.gridBaseImpl.{Grid, Level, Matrix, Piece}
 
 import scala.swing.Publisher
 
 trait ControllerInterface extends Publisher {
 
-  def create_empty_grid(): Unit
+  def createEmptyGrid(): Unit
 
   def toggleShow(): Unit
 
@@ -34,9 +34,11 @@ trait ControllerInterface extends Publisher {
 
   def gridSize: Int
 
-  def gridMatrix: Matrix
-
   def gameStatus: GameStatus
+  //def gridMatrix: Matrix
+  def isSet(row: Int, col: Int): Boolean
+  def cell(row: Int, col: Int): Piece
+
 }
 
 

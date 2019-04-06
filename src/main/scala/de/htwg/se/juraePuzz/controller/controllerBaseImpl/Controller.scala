@@ -14,31 +14,34 @@ import de.htwg.se.juraePuzz.util._
 
 import scala.swing.Publisher
 
-class Controller @Inject() (var grid: GridInterface) extends ControllerInterface with Publisher{
+class Controller @Inject()(var grid: GridInterface) extends ControllerInterface with Publisher {
 
   var gameStatus: GameStatus = IDLE
   val undoManager = new UndoManager
   val injector = Guice.createInjector(new JuraePuzzModule)
   val fileIo = injector.instance[FileIOInterface]
 
-  def create_empty_grid(): Unit ={
-    grid.empty()
-    toggleShow
-  }
+  def isSet(row: Int, col: Int): Boolean = grid.cell(row, col).isSet
+
+  def cell(row: Int, col: Int) = grid.cell(row, col)
+
+
 
   def toggleShow() = publish(new CellChanged)
 
   def statusText: String = GameStatus.message(gameStatus)
 
-  def create_Level(): Unit ={
-    var st1 = new GetSpecifiedLevel()
-    if (grid.fill(st1.createLevel(this))) {
-      gameStatus = CREATE_LEVEL
-    }
-  toggleShow()
+  def create_Level(): Unit = {
+    /*
+        var st1 = new GetSpecifiedLevel()
+        if (grid.fill(st1.createLevel(this))) {
+          gameStatus = CREATE_LEVEL
+        }
+      toggleShow()
+    */
   }
 
-  def move(xS:Int, yS:Int, xT:Int, yT:Int): Unit = {
+  def move(xS: Int, yS: Int, xT: Int, yT: Int): Unit = {
     if (undoManager.doStep(new SetCommand(xS, yS, xT, yT, this))) {
       if (new Solver(grid).check_level()) {
         gameStatus = SOLVED
@@ -61,14 +64,14 @@ class Controller @Inject() (var grid: GridInterface) extends ControllerInterface
     toggleShow
   }
 
-  def solve(): Unit ={
+  def solve(): Unit = {
     grid.solve()
     gameStatus = SOLVED
     toggleShow()
   }
 
-  def create_Level(l:Level): Unit ={
-    grid.fill(l)
+  def create_Level(l: Level): Unit = {
+    //grid.fill(l)
   }
 
   def save: Unit = {
@@ -81,7 +84,7 @@ class Controller @Inject() (var grid: GridInterface) extends ControllerInterface
     val gridOption = fileIo.load
     gridOption match {
       case None => {
-        create_empty_grid()
+        createEmptyGrid()
         gameStatus = COULDNOTLOAD
       }
       case Some(_grid) => {
@@ -94,7 +97,36 @@ class Controller @Inject() (var grid: GridInterface) extends ControllerInterface
 
   override def gridToString: String = grid.toString()
 
-  def gridSize:Int = grid.getSize()
+  def gridSize: Int = grid.size
 
-  def gridMatrix: Matrix = grid.getMatrix()
+  //def gridMatrix: Matrix = grid.
+
+
+  def createEmptyGrid(): Unit = {
+    grid.empty()
+    toggleShow
+  }
+  /*
+  def createEmptyGrid: Unit = {
+    grid.size match {
+      case 1 => grid = injector.instance[GridInterface](Names.named("tiny"))
+      case 3 => grid = injector.instance[GridInterface](Names.named("small"))
+      case 9 => grid = injector.instance[GridInterface](Names.named("normal"))
+      case _ =>
+    }
+    publish(new CellChanged)
+  }
+
+  def createNewGrid: Unit = {
+    grid.size match {
+      case 1 => grid = injector.instance[GridInterface](Names.named("tiny"))
+      case 3 => grid = injector.instance[GridInterface](Names.named("small"))
+      case 9 => grid = injector.instance[GridInterface](Names.named("normal"))
+      case _ =>
+    }
+    grid = grid.createNewGrid
+    gameStatus = GameStatus.CREATE_LEVEL
+    publish(new CellChanged)
+  }
+  */
 }

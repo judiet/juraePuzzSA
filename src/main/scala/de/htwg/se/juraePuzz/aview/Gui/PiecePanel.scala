@@ -15,13 +15,17 @@ class PiecePanel (row: Int, column: Int, controller: ControllerInterface) extend
   val highlightedCellColor = new Color(192, 255, 192)
   var clicked = false
 
-  def pieceText = {
-    controller.gridMatrix.get(row, column).s
-  }
+
+  def pieceText(row: Int, col: Int) = if (controller.isSet(row, column)) " " + controller.cell(row, column).value.toString else " "
+
+
+  /*def pieceText = {
+    controller.cell(row, column).s
+  }*/
 
   val label =
     new Label {
-      text = pieceText.toString
+      text = pieceText(row,column)
       font = new Font("OLDENGL", 1, 36)
     }
 
@@ -32,16 +36,16 @@ class PiecePanel (row: Int, column: Int, controller: ControllerInterface) extend
     listenTo(mouse.clicks)
     reactions += {
       case e: MouseClicked => {
-        if(row - 1 >= 0 && controller.gridMatrix.get(row - 1, column).s==0){
+        if(row - 1 >= 0 && controller.cell(row - 1,column).value ==0){
           controller.move(row, column, row - 1, column)
         }
-        if (column - 1 >= 0 && controller.gridMatrix.get(row, column - 1).s ==0){
+        if (column - 1 >= 0 && controller.cell(row, column - 1) ==0){
           controller.move(row, column, row, column - 1)
         }
-        if (column + 1 < controller.gridMatrix.size && controller.gridMatrix.get(row, column + 1).s ==0){
+        if (column + 1 < controller.gridSize && controller.cell(row, column + 1) ==0){
           controller.move(row, column, row, column + 1)
         }
-        if (row + 1 < controller.gridMatrix.size && controller.gridMatrix.get(row + 1, column).s ==0) {
+        if (row + 1 < controller.gridSize && controller.cell(row + 1, column) ==0) {
           controller.move(row, column, row + 1, column)
         }
       }
@@ -52,7 +56,7 @@ class PiecePanel (row: Int, column: Int, controller: ControllerInterface) extend
 
   def redraw: Unit = {
     contents.clear()
-    label.text = pieceText.toString
+    label.text = pieceText(row,column)
     contents += piece
     repaint
   }
