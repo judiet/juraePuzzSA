@@ -10,11 +10,11 @@ trait ControllerInterface extends Publisher {
 
   def createEmptyGrid(): Unit
 
+  def createNewGrid: Unit
+
   def toggleShow(): Unit
 
   def statusText: String
-
-  def create_Level(): Unit
 
   def move(xS:Int, yS:Int, xT:Int, yT:Int): Unit
 
@@ -36,7 +36,7 @@ trait ControllerInterface extends Publisher {
 
   def gameStatus: GameStatus
   //def gridMatrix: Matrix
-  def isSet(row: Int, col: Int): Boolean
+  //def isSet(row: Int, col: Int): Boolean
   def cell(row: Int, col: Int): Piece
 
 }

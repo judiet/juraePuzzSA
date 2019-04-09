@@ -36,7 +36,7 @@ class ControllerSpec extends WordSpec with Matchers {
     }*/
     "should have status solved" in {
       controller.createEmptyGrid()
-      controller.create_Level()
+      controller.createNewGrid
       val solver = new Solver(controller.grid)
       controller.solve()
       controller.gameStatus should be (GameStatus.SOLVED)
@@ -49,7 +49,7 @@ class ControllerSpec extends WordSpec with Matchers {
     }
     "should have status illegal turn" in {
       controller.createEmptyGrid()
-      controller.create_Level()
+      controller.createNewGrid
       controller.move(2, 1, 1, 2)
       controller.gameStatus should be (GameStatus.ILLEGAL_TURN)
     }
@@ -80,7 +80,7 @@ class ControllerSpec extends WordSpec with Matchers {
     }
     "save a game" in {
       controller.createEmptyGrid()
-      controller.create_Level()
+      controller.createNewGrid
       controller.save
       controller.gameStatus should be (GameStatus.SAVED)
     }
@@ -91,7 +91,7 @@ class ControllerSpec extends WordSpec with Matchers {
     "load a game" in {
       var grid = new Grid(3)
       var controller = new Controller(grid)
-      controller.create_Level()
+      controller.createNewGrid
       controller.save
       controller.load
       controller.gameStatus should be (GameStatus.LOADED)

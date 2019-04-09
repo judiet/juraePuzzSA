@@ -21,35 +21,31 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
   val injector = Guice.createInjector(new JuraePuzzModule)
   val fileIo = injector.instance[FileIOInterface]
 
-  def isSet(row: Int, col: Int): Boolean = grid.cell(row, col).isSet
+  //def isSet(row: Int, col: Int): Boolean = grid.cell(row, col).isSet
 
   def cell(row: Int, col: Int) = grid.cell(row, col)
-
-
 
   def toggleShow() = publish(new CellChanged)
 
   def statusText: String = GameStatus.message(gameStatus)
 
-  def create_Level(): Unit = {
-    /*
-        var st1 = new GetSpecifiedLevel()
-        if (grid.fill(st1.createLevel(this))) {
-          gameStatus = CREATE_LEVEL
-        }
-      toggleShow()
-    */
-  }
+  /*
+    def create_Level(): Unit = {
 
-  def move(xS: Int, yS: Int, xT: Int, yT: Int): Unit = {
-    if (undoManager.doStep(new SetCommand(xS, yS, xT, yT, this))) {
-      if (new Solver(grid).check_level()) {
-        gameStatus = SOLVED
-      } else {
-        gameStatus = NOT_SOLVED_YET
+      var st1 = new GetSpecifiedLevel()
+      if (grid.fill(st1.createLevel(this))) {
+        gameStatus = CREATE_LEVEL
       }
+      toggleShow()
+
+    }
+  */
+  def move(xS: Int, yS: Int, xT: Int, yT: Int): Unit = {
+    undoManager.doStep(new SetCommand(xS, yS, xT, yT, this))
+    if (new Solver(grid).check_level()) {
+      gameStatus = SOLVED
     } else {
-      gameStatus = ILLEGAL_TURN
+      gameStatus = NOT_SOLVED_YET
     }
     toggleShow()
   }
@@ -101,29 +97,38 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
 
   //def gridMatrix: Matrix = grid.
 
-
   def createEmptyGrid(): Unit = {
     grid.empty()
     toggleShow
+    gameStatus = GameStatus.CREATE_LEVEL
+    publish(new CellChanged)
   }
+
+  override def createNewGrid: Unit = {
+    grid = grid.createNewGrid
+    toggleShow
+    gameStatus = GameStatus.CREATE_LEVEL
+    publish(new CellChanged)
+  }
+
   /*
-  def createEmptyGrid: Unit = {
+    def createEmptyGrid: Unit = {
     grid.size match {
-      case 1 => grid = injector.instance[GridInterface](Names.named("tiny"))
-      case 3 => grid = injector.instance[GridInterface](Names.named("small"))
-      case 9 => grid = injector.instance[GridInterface](Names.named("normal"))
-      case _ =>
-    }
+    case 1 => grid = injector.instance[GridInterface](Names.named("tiny"))
+    case 3 => grid = injector.instance[GridInterface](Names.named("small"))
+    case 9 => grid = injector.instance[GridInterface](Names.named("normal"))
+    case _ =>
+  }
     publish(new CellChanged)
   }
 
   def createNewGrid: Unit = {
     grid.size match {
-      case 1 => grid = injector.instance[GridInterface](Names.named("tiny"))
-      case 3 => grid = injector.instance[GridInterface](Names.named("small"))
-      case 9 => grid = injector.instance[GridInterface](Names.named("normal"))
-      case _ =>
-    }
+    case 1 => grid = injector.instance[GridInterface](Names.named("tiny"))
+    case 3 => grid = injector.instance[GridInterface](Names.named("small"))
+    case 9 => grid = injector.instance[GridInterface](Names.named("normal"))
+    case _ =>
+  }
     grid = grid.createNewGrid
     gameStatus = GameStatus.CREATE_LEVEL
     publish(new CellChanged)

@@ -12,15 +12,16 @@ class GetSpecifiedLevel extends LevelGenerateStrategyTemplate {
   }
   def fill(_grid:GridInterface): GridInterface = {
     val num = Math.sqrt(9).toInt
-    var grid:GridInterface = new Grid(9)
+    var grid:GridInterface = new Grid(_grid.size)
+    val level = createLevel(_grid)
     for (i <- 0 until _grid.size; j <- 0 until _grid.size) {
-      _grid.set(i,j,1)
+      grid = grid.set(i,j,level.s(j + i * grid.size))
     }
     grid
   }
 
-  override def createLevel(controller: Controller): Level = {
-    val size = controller.grid.size * controller.grid.size
+  def createLevel(grid: GridInterface): Level = {
+    val size = grid.size * grid.size
     var l = Array.ofDim[Int](size)
     for (i <- 0 until (size) - 1) {
       l(i) = i + 1

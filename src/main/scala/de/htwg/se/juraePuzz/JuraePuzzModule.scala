@@ -15,12 +15,12 @@ class JuraePuzzModule extends AbstractModule with ScalaModule {
 
   def configure() = {
 
-    bindConstant().annotatedWith(Names.named("DefaultSize")).to(defaultSize)
+    /*bindConstant().annotatedWith(Names.named("DefaultSize")).to(defaultSize)
     bind[GridInterface].to[Grid]
     bind[ControllerInterface].to[controller.controllerBaseImpl.Controller]
 
-    //bind[GridInterface].annotatedWithName("mittel").toInstance(new model.gridBaseImpl.Grid(3))
-
+*/
+   // bind[GridInterface].annotatedWithName("mittel").toInstance(new model.gridBaseImpl.Grid(3))
     bind[FileIOInterface].to[model.fileIoComponent.fileIoXmlImpl.FileIO]
 
   }

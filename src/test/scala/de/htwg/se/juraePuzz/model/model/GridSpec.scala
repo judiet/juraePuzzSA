@@ -46,8 +46,8 @@ class GridSpec extends WordSpec with Matchers {
         g.move(0, 0, 0, 1)
         g.matrix.cell(0,0) should be(Piece(0))
         g.matrix.cell(0, 1) should be (Piece(1))
-        g.move(0,0, 1,0) should be (false)
-        g.move(0, 0, 1, -1) should be (false)
+        //g.move(0,0, 1,0) should be (false)
+        //g.move(0, 0, 1, -1) should be (false)
       }
       /*"generateGrid with Level" in {
         g.fill(Level(Array(1,2,3,4))) should be (true)

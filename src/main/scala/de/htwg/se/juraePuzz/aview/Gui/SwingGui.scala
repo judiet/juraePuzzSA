@@ -7,8 +7,10 @@ import de.htwg.se.juraePuzz.controller.controllerBaseImpl.Controller
 import scala.swing._
 import scala.swing.event.{Event, MouseClicked}
 
-class SwingGui(controller: ControllerInterface) extends Frame{
+class SwingGui(controller: ControllerInterface) extends Frame {
   title = "juraePuzz"
+
+  listenTo(controller)
 
   var cells = Array.ofDim[PiecePanel](controller.gridSize, controller.gridSize)
 
@@ -18,27 +20,25 @@ class SwingGui(controller: ControllerInterface) extends Frame{
       row <- 0 until controller.gridSize
       col <- 0 until controller.gridSize
     } {
-        val piecePanel = new PiecePanel(row, col, controller)
-        cells(row)(col) = piecePanel
-        contents += piecePanel
-        listenTo(piecePanel)
-      }
+      val piecePanel = new PiecePanel(row, col, controller)
+      cells(row)(col) = piecePanel
+      contents += piecePanel
+      listenTo(piecePanel)
+    }
   }
 
-  listenTo(controller)
-
-  def buttonPanel = new FlowPanel{
+  def buttonPanel = new FlowPanel {
     contents += new Button("New") {
       listenTo(mouse.clicks)
       reactions += {
-        case e: MouseClicked =>{
-          controller.create_Level()
+        case e: MouseClicked => {
+          controller.createNewGrid
           redraw
         }
       }
     }
 
-    contents += new Button("Quit"){
+    contents += new Button("Quit") {
       listenTo(mouse.clicks)
       reactions += {
         case e: MouseClicked => System.exit(0)
@@ -47,27 +47,27 @@ class SwingGui(controller: ControllerInterface) extends Frame{
     contents += new Button("Undo step") {
       listenTo(mouse.clicks)
       reactions += {
-        case e : MouseClicked => controller.undo
+        case e: MouseClicked => controller.undo
       }
     }
     contents += new Button("Redo step") {
       listenTo(mouse.clicks)
       reactions += {
-        case e : MouseClicked => controller.redo
+        case e: MouseClicked => controller.redo
       }
     }
 
     contents += new Button("Save") {
       listenTo(mouse.clicks)
       reactions += {
-        case e : MouseClicked => controller.save
+        case e: MouseClicked => controller.save
       }
     }
 
     contents += new Button("Load") {
       listenTo(mouse.clicks)
       reactions += {
-        case e : MouseClicked => controller.load
+        case e: MouseClicked => controller.load
       }
     }
 
@@ -81,7 +81,7 @@ class SwingGui(controller: ControllerInterface) extends Frame{
     add(gridPanel, BorderPanel.Position.Center)
     add(statusline, BorderPanel.Position.South)
   }
-   visible = true
+  visible = true
   redraw
 
   reactions += {

@@ -10,7 +10,7 @@ class Controller(var grid: Grid) extends ControllerInterface{
 
   override def statusText: String = "Status"
 
-  override def create_Level(): Unit = {}
+  override def createNewGrid: Unit = {}
 
   override def move(xS: Int, yS: Int, xT: Int, yT: Int): Unit = {}
 
@@ -32,7 +32,7 @@ class Controller(var grid: Grid) extends ControllerInterface{
 
   override def gameStatus = GameStatus.IDLE
 
-  override def isSet(row: Int, col: Int): Boolean = true
+  //override def isSet(row: Int, col: Int): Boolean = true
 
   override def cell(row: Int, col: Int): Piece = Piece(0)
 }

@@ -6,10 +6,13 @@ import de.htwg.se.juraePuzz.aview.Gui.SwingGui
 import de.htwg.se.juraePuzz.controller.ControllerInterface
 import de.htwg.se.juraePuzz.controller.controllerBaseImpl.Controller
 import de.htwg.se.juraePuzz.model.gridBaseImpl.Grid
+
 object juraePuzz {
 
   val injector = Guice.createInjector(new JuraePuzzModule)
-  val controller = injector.getInstance(classOf[ControllerInterface])
+  //val controller = injector.getInstance(classOf[ControllerInterface])
+  val grid = new Grid(3)
+  val controller = new Controller(grid)
 
   val tui = new Tui(controller)
   val gui = new SwingGui(controller)

@@ -18,7 +18,7 @@ class Tui (controller: ControllerInterface) extends Reactor{
       case "n" => controller.createEmptyGrid()
       case "z" => controller.undo
       case "y" => controller.redo
-      case "c" => controller.create_Level()
+      case "c" => controller.createNewGrid
       case "s" => controller.solve()
       case "f" => controller.save
       case "l" => controller.load
