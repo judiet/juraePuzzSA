@@ -72,7 +72,7 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
       val grid = setMove(xT,yT,pS.value,xS,yS,pT.value)
       grid
     } else {
-      new Grid(3)
+      new Grid(0)
     }
   }
   def checkMove(xS: Int, yS: Int, xT: Int, yT: Int): Boolean = {

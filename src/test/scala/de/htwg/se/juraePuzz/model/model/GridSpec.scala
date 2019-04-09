@@ -1,6 +1,6 @@
 package de.htwg.se.juraePuzz.model.model
 
-import de.htwg.se.juraePuzz.model.gridBaseImpl.{Grid, Level, Piece, Rotation}
+import de.htwg.se.juraePuzz.model.gridBaseImpl.{Grid, _}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
@@ -21,6 +21,8 @@ class GridSpec extends WordSpec with Matchers {
       }
 
       "have Curves" in {
+
+        val g = new Grid(new Matrix[Piece](Vector(Vector(Piece(1), Piece(1)), Vector(Piece(1), Piece(1)))))
         for (i <- 0 until g.getSize(); j <- 0 until g.getSize()){
           g.set(i, j,1)
         }
@@ -30,8 +32,7 @@ class GridSpec extends WordSpec with Matchers {
         g.matrix.cell(1, 1) should be(Piece(1))
       }
       "be edited" in {
-        g.empty()
-        g.set( 1, 1,1)
+        val g = new Grid(new Matrix[Piece](Vector(Vector(Piece(0), Piece(0)), Vector(Piece(0), Piece(1)))))
         g.checkMove(1, 1, 1, 0) should be(true)
         g.checkMove(0, 0, 1, 1) should be(false)
         g.checkMove(1, 1, 0, 1) should be(true)
@@ -41,13 +42,13 @@ class GridSpec extends WordSpec with Matchers {
         g.checkMove(1, 1, 0, 0) should be(false)
       }
       "move correct" in {
-        g.empty()
-        g.set( 0, 0,1)
-        g.move(0, 0, 0, 1)
-        g.matrix.cell(0,0) should be(Piece(0))
-        g.matrix.cell(0, 1) should be (Piece(1))
-        //g.move(0,0, 1,0) should be (false)
-        //g.move(0, 0, 1, -1) should be (false)
+        val g = new Grid(new Matrix[Piece](Vector(Vector(Piece(1), Piece(0)), Vector(Piece(0), Piece(0)))))
+        g.move(0, 0, 0, 1) should be (new Grid(new Matrix[Piece](Vector(Vector(Piece(0), Piece(1)), Vector(Piece(0), Piece(0))))))
+        g.matrix.cell(0,0) should be(Piece(1))
+        g.matrix.cell(0, 1) should be (Piece(0))
+        g.move(0,0, 1,0) should be (new Grid(new Matrix[Piece](Vector(Vector(Piece(0), Piece(0)), Vector(Piece(1), Piece(0))))))
+        g.move(0, 0, 1, -1) should be (new Grid(0))
+
       }
       /*"generateGrid with Level" in {
         g.fill(Level(Array(1,2,3,4))) should be (true)

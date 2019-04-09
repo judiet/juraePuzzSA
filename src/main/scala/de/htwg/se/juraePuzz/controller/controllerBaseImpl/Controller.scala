@@ -66,10 +66,6 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     toggleShow()
   }
 
-  def create_Level(l: Level): Unit = {
-    //grid.fill(l)
-  }
-
   def save: Unit = {
     fileIo.save(grid)
     gameStatus = SAVED
