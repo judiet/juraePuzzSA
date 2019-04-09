@@ -47,7 +47,7 @@ class GridSpec extends WordSpec with Matchers {
       g.matrix.cell(0,0) should be(Piece(1))
       g.matrix.cell(0, 1) should be (Piece(0))
       g.move(0,0, 1,0) should be (new Grid(new Matrix[Piece](Vector(Vector(Piece(0), Piece(0)), Vector(Piece(1), Piece(0))))))
-      g.move(0, 0, 1, -1) should be (new Grid(3))
+      g.move(0, 0, 1, -1) should be (new Grid(0))
 
     }
     /*"generateGrid with Level" in {
