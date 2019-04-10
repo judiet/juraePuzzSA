@@ -100,14 +100,14 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
     false
   }
 
-  def getLevel(): Level = {
+  def getLevel(): Option[Level] = {
     val size = matrix.size
-    var sb = Array.ofDim[Int](size * size)
+    val sb = Array.ofDim[Int](size * size)
 
     for (i <- 0 until size; j <- 0 until size) {
       sb(j + i * size) = matrix.cell(i, j).value
     }
-    Level(sb)
+    Some(Level(sb))
   }
 
   def solve(): Unit = {

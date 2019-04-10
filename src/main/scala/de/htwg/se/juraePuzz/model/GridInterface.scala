@@ -27,7 +27,7 @@ trait GridInterface extends Publisher {
 
   def checkMove(xS: Int, yS: Int, xT: Int, yT: Int): Boolean
 
-  def getLevel(): Level
+  def getLevel(): Option[Level]
 
   def solve(): Unit
 

@@ -1,6 +1,5 @@
 package de.htwg.se.juraePuzz.model.gridBaseImpl
 
-import de.htwg.se.juraePuzz.controller.controllerBaseImpl.Controller
 import de.htwg.se.juraePuzz.model.GridInterface
 
 class GetSpecifiedLevel extends LevelGenerateStrategyTemplate {
@@ -28,15 +27,15 @@ class GetSpecifiedLevel extends LevelGenerateStrategyTemplate {
   def createLevel(grid: GridInterface): Option[Level] = {
     val size = grid.size * grid.size
     val l = Array.ofDim[Int](size)
-    for (i <- 0 until (size) - 1) {
+    for (i <- 0 until size - 1) {
       l(i) = i + 1
     }
     shuffle(l)
     Some(Level(l))
   }
 
-  private def shuffle(array: Array[Int]) = {
-    for (i <- 0 until array.length) {
+  private def shuffle(array: Array[Int]): Unit = {
+    for (i <- array.indices) {
       val r = i + (Math.random() * (array.length - i)).toInt
       val tmp = array(i)
       array(i) = array(r)
@@ -47,20 +46,20 @@ class GetSpecifiedLevel extends LevelGenerateStrategyTemplate {
 
   private def ensureSolvable(array: Array[Int]): Unit = {
     var inv_count = 0
-    var arr = Array.ofDim[Int](array.length - 1)
+    val arr = Array.ofDim[Int](array.length - 1)
     var j = 0
-    for (i <- 0 until array.length) {
-      if (array(i) != 0) {
+    for (i <- array.indices) {
+      if ( array(i) != 0 ) {
         arr(j) = array(i)
         j += 1
       }
     }
-    for (i <- 0 until arr.length; j <- i + 1 until (arr.length)) {
-      if (arr(i) > arr(j)) {
+    for (i <- arr.indices; j <- i + 1 until arr.length) {
+      if ( arr(i) > arr(j) ) {
         inv_count += 1
       }
     }
-    if (inv_count % 2 != 0) {
+    if ( inv_count % 2 != 0 ) {
       shuffle(array)
     }
   }

@@ -37,7 +37,6 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
         gameStatus = CREATE_LEVEL
       }
       toggleShow()
-
     }
   */
   def move(xS: Int, yS: Int, xT: Int, yT: Int): Unit = {
