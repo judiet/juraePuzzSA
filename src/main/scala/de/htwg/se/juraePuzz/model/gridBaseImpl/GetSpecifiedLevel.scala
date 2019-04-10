@@ -11,7 +11,6 @@ class GetSpecifiedLevel extends LevelGenerateStrategyTemplate {
   }
 
   def fill(_grid: GridInterface): GridInterface = {
-    val num = Math.sqrt(9).toInt
     var grid: GridInterface = new Grid(_grid.size)
     val level = createLevel(_grid)
     level match{
