@@ -5,31 +5,34 @@ import de.htwg.se.juraePuzz.model.GridInterface
 
 class GetSpecifiedLevel extends LevelGenerateStrategyTemplate {
 
-  def createNewGrid(size:Int): GridInterface = {
-    var grid:GridInterface = new Grid(size)
-      grid = fill(grid) match {
-        case Some(grid)=>grid
-      }
+  def createNewGrid(size: Int): GridInterface = {
+    var grid: GridInterface = new Grid(size)
+    grid = fill(grid) match {
+      case Some(grid) => grid
+    }
     grid
   }
-  def fill(_grid:GridInterface): Option[GridInterface] = {
+
+  def fill(_grid: GridInterface): Option[GridInterface] = {
     val num = Math.sqrt(9).toInt
-    var grid:GridInterface = new Grid(_grid.size)
-    val level = createLevel(_grid)
-    for (i <- 0 until _grid.size; j <- 0 until _grid.size) {
-      grid = grid.set(i,j,level.s(j + i * grid.size))
+    var grid: GridInterface = new Grid(_grid.size)
+    val level = createLevel(_grid) match {
+      case Some(level) => level
+        for (i <- 0 until _grid.size; j <- 0 until _grid.size) {
+          grid = grid.set(i, j, level.s(j + i * grid.size))
+        }
     }
     Some(grid)
   }
 
-  def createLevel(grid: GridInterface): Level = {
+  def createLevel(grid: GridInterface): Option[Level] = {
     val size = grid.size * grid.size
     val l = Array.ofDim[Int](size)
     for (i <- 0 until (size) - 1) {
       l(i) = i + 1
     }
     shuffle(l)
-    Level(l)
+    Some(Level(l))
   }
 
   private def shuffle(array: Array[Int]) = {
