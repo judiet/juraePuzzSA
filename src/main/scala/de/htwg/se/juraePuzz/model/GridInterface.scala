@@ -23,7 +23,7 @@ trait GridInterface extends Publisher {
 
   //def fill(grid: GridInterface) : GridInterface
 
-  def move(xS: Int, yS: Int, xT: Int, yT: Int): GridInterface
+  def move(xS: Int, yS: Int, xT: Int, yT: Int): Option[GridInterface]
 
   def checkMove(xS: Int, yS: Int, xT: Int, yT: Int): Boolean
 

@@ -10,7 +10,7 @@ class GridSpec extends WordSpec with Matchers {
   "A grid" should {
     val g = new Grid(2)
     "have a size" in {
-      g.getSize() should be(2)
+      g.size should be(2)
     }
     "have Pieces" in {
       g.empty()
@@ -23,7 +23,7 @@ class GridSpec extends WordSpec with Matchers {
     "have Curves" in {
 
       val g = new Grid(new Matrix[Piece](Vector(Vector(Piece(1), Piece(1)), Vector(Piece(1), Piece(1)))))
-      for (i <- 0 until g.getSize(); j <- 0 until g.getSize()){
+      for (i <- 0 until g.size; j <- 0 until g.size){
         g.set(i, j,1)
       }
       g.matrix.cell(0, 0) should be(Piece(1))

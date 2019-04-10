@@ -14,21 +14,15 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
   def createNewGrid: GridInterface = (new GetSpecifiedLevel).createNewGrid(size)
 
   def set(row: Int, col: Int, value: Int): Grid = {
-    val s = matrix.replaceCell(row, col, Piece(value))
-    copy(s)
+    copy(matrix.replaceCell(row, col, Piece(value)))
   }
 
   def cell(row: Int, col: Int): Piece = matrix.cell(row, col)
 
   def empty(): Unit = {
-    for (i <- 0 until size; j <- 0 until size) {
+    for (i <- 0 until size; j <- 0 until size) yield {
       matrix.fill(Piece(0))
-      //copy(matrix.replaceCell(i, j, Piece(0)))
     }
-  }
-
-  def getSize(): Int = {
-    matrix.size
   }
 
   override def toString(): String = {
@@ -57,11 +51,10 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
 }
   }*/
   override def setMove(row: Int, col: Int, value: Int, row1: Int, col1: Int, value1: Int): GridInterface = {
-    val grid  = matrix.replaceCells(row, col, Piece(value),row1, col1, Piece(value1))
-    copy(grid)
+    copy(matrix.replaceCells(row, col, Piece(value),row1, col1, Piece(value1)))
   }
 
-  def move(xS: Int, yS: Int, xT: Int, yT: Int): GridInterface = {
+  def move(xS: Int, yS: Int, xT: Int, yT: Int): Option[GridInterface] = {
     if (checkMove(xS, yS, xT, yT)) {
       val pS = matrix.cell(xS, yS)
       val pT = matrix.cell(xT, yT)
@@ -70,9 +63,9 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
       //matrix.fill(pS, xT, yT)
       //matrix.fill(pT, xS, yS)
       val grid = setMove(xT,yT,pS.value,xS,yS,pT.value)
-      grid
+      Some(grid)
     } else {
-      new Grid(0)
+      None
     }
   }
   def checkMove(xS: Int, yS: Int, xT: Int, yT: Int): Boolean = {

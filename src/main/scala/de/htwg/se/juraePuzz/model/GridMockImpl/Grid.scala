@@ -12,7 +12,7 @@ class Grid extends GridInterface {
 
   //override def fill(l: Level): Boolean = true
 
-  def move(xS: Int, yS: Int, xT: Int, yT: Int): GridInterface = this
+  def move(xS: Int, yS: Int, xT: Int, yT: Int): Option[GridInterface] = None
 
   def checkMove(xS: Int, yS: Int, xT: Int, yT: Int): Boolean = true
 
