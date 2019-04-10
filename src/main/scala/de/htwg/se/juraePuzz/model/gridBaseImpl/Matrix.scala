@@ -24,5 +24,6 @@ case class Matrix[T](rows: Vector[Vector[T]]) {
     copy(tmp)
   }
 
+
   //def get(row:Int, col:Int) = matrix(row)(col)
 }

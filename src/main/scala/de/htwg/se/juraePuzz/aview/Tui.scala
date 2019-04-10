@@ -5,6 +5,7 @@ import de.htwg.se.juraePuzz.controller.{ControllerInterface, GameStatus}
 import de.htwg.se.juraePuzz.util.Observer
 import de.htwg.se.juraePuzz.controller.GameStatus._
 import de.htwg.se.juraePuzz.controller.controllerBaseImpl.Controller
+import de.htwg.se.juraePuzz.model.gridBaseImpl.Direction
 
 import scala.swing.Reactor
 
@@ -22,10 +23,11 @@ class Tui (controller: ControllerInterface) extends Reactor{
       case "s" => controller.solve()
       case "f" => controller.save
       case "l" => controller.load
-      case _ => input.toList.filter(c => c != ' ').map(c => c.toString.toInt) match {
-        case xS :: yS :: xT :: yT :: Nil => controller.move(xS, yS, xT, yT)
-        case _ =>
-      }
+      case "up" => controller.move(Direction.Up)
+      case "down" => controller.move(Direction.Down)
+      case "left" => controller.move(Direction.Left)
+      case "right" => controller.move(Direction.Right)
+      case _ =>
     }
   }
 

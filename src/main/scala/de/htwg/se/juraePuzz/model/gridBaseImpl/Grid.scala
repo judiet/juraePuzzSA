@@ -49,7 +49,7 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
 }
   }*/
   override def setMove(row: Int, col: Int, value: Int, row1: Int, col1: Int, value1: Int): GridInterface = {
-    copy(matrix.replaceCells(row, col, Piece(value),row1, col1, Piece(value1)))
+    copy(matrix.replaceCells(row, col, Piece(value), row1, col1, Piece(value1)))
   }
 
   def move(xS: Int, yS: Int, xT: Int, yT: Int): Option[GridInterface] = {
@@ -60,12 +60,13 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
       //matrix.replaceCell(xS, yS, pT)
       //matrix.fill(pS, xT, yT)
       //matrix.fill(pT, xS, yS)
-      val grid = setMove(xT,yT,pS.value,xS,yS,pT.value)
+      val grid = setMove(xT, yT, pS.value, xS, yS, pT.value)
       Some(grid)
     } else {
       None
     }
   }
+
   def checkMove(xS: Int, yS: Int, xT: Int, yT: Int): Boolean = {
     if (xS >= matrix.size || xT >= matrix.size || yS >= matrix.size || yT >= matrix.size) {
       return false
@@ -110,8 +111,58 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
     Some(Level(sb))
   }
 
-  def solve(): Unit = {
-    //fill(new Solver(this).solve())
+
+  //Solver Methodes:
+
+  def findNullValue(): Option[(Int, Int)] = {
+    for (i <- 0 until size; j <- 0 until size) {
+      val x = matrix.cell(i, j).value
+      if (x == 0) {
+        return Some(i, j)
+      }
+    }
+    None
   }
 
+  def mapMoveToDirection(direction: Direction.Value): Option[GridInterface] = {
+    val value = findNullValue() match {
+      case Some(value) => value
+      case None => (0, 0)
+    }
+    val row = value._1
+    val col = value._2
+    direction match {
+      case Direction.Up =>
+        helper(row - 1, col, row, col) match {
+          case Some(value) => return Some(value)
+          case None =>
+        }
+      case Direction.Down =>
+        helper(row + 1, col, row, col) match {
+          case Some(value) => return Some(value)
+          case None =>
+        }
+      case Direction.Left =>
+        helper(row, col + 1, row, col) match {
+          case Some(value) => return Some(value)
+          case None =>
+        }
+      case Direction.Right =>
+        helper(row, col - 1, row, col) match {
+          case Some(value) => return Some(value)
+          case None =>
+        }
+    }
+    None
+  }
+
+  def helper(rowNull: Int, colNull: Int, row: Int, col: Int): Option[GridInterface] = {
+    if (checkMove(rowNull, colNull, row, col)) {
+      val pS = matrix.cell(rowNull, colNull)
+      val pT = matrix.cell(row, col)
+      val grid = setMove(rowNull, colNull, pT.value, row, col, pS.value)
+      return Some(grid)
+    }
+    None
+  }
 }

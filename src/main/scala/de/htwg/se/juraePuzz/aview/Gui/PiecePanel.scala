@@ -2,6 +2,7 @@ package de.htwg.se.juraePuzz.aview.Gui
 
 import de.htwg.se.juraePuzz.controller.{ControllerInterface, ShowCand}
 import de.htwg.se.juraePuzz.controller.controllerBaseImpl.Controller
+import de.htwg.se.juraePuzz.model.gridBaseImpl.Direction
 
 import scala.swing._
 import scala.swing.event.{Event, KeyPressed, MouseClicked}
@@ -37,16 +38,20 @@ class PiecePanel(row: Int, column: Int, controller: ControllerInterface) extends
     reactions += {
       case e: MouseClicked => {
         if (row - 1 >= 0 && controller.cell(row - 1, column).value == 0) {
-          controller.move(row, column, row - 1, column)
+          controller.move(Direction.Down)
+          //controller.move(row, column, row - 1, column)
         }
         if (column - 1 >= 0 && controller.cell(row, column - 1).value == 0) {
-          controller.move(row, column, row, column - 1)
+          controller.move(Direction.Left)
+          //controller.move(row, column, row, column - 1)
         }
         if (column + 1 < controller.gridSize && controller.cell(row, column + 1).value == 0) {
-          controller.move(row, column, row, column + 1)
+          controller.move(Direction.Right)
+          //controller.move(row, column, row, column + 1)
         }
         if (row + 1 < controller.gridSize && controller.cell(row + 1, column).value == 0) {
-          controller.move(row, column, row + 1, column)
+          controller.move(Direction.Up)
+          //controller.move(row, column, row + 1, column)
         }
       }
     }

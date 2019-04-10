@@ -5,7 +5,7 @@ import com.google.inject.name.Names
 import de.htwg.se.juraePuzz.JuraePuzzModule
 import de.htwg.se.juraePuzz.model.GridInterface
 import de.htwg.se.juraePuzz.model.fileIoComponent.FileIOInterface
-import de.htwg.se.juraePuzz.model.gridBaseImpl.{Piece, Rotation}
+import de.htwg.se.juraePuzz.model.gridBaseImpl.{Piece, Direction}
 import net.codingwell.scalaguice.InjectorExtensions._
 
 import scala.xml.PrettyPrinter

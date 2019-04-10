@@ -1,7 +1,7 @@
 package de.htwg.se.juraePuzz.controller.ControllerMockImpl
 
 import de.htwg.se.juraePuzz.controller.{ControllerInterface, GameStatus}
-import de.htwg.se.juraePuzz.model.gridBaseImpl.{Grid, Level, Matrix, Piece}
+import de.htwg.se.juraePuzz.model.gridBaseImpl._
 
 class Controller(var grid: Grid) extends ControllerInterface{
   override def createEmptyGrid(): Unit = {}
@@ -12,7 +12,7 @@ class Controller(var grid: Grid) extends ControllerInterface{
 
   override def createNewGrid: Unit = {}
 
-  override def move(xS: Int, yS: Int, xT: Int, yT: Int): Unit = {}
+  override def move(direction:Direction.Value): Unit = {}
 
   override def undo: Unit = {}
 
