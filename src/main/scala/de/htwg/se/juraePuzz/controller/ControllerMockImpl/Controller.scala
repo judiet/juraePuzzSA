@@ -20,8 +20,6 @@ class Controller(var grid: Grid) extends ControllerInterface{
 
   override def solve(): Unit = {}
 
-  override def create_Level(l: Level): Unit = {}
-
   override def save: Unit = {}
 
   override def load: Unit = {}

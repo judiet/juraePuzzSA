@@ -1,6 +1,6 @@
 package de.htwg.se.juraePuzz.model.model
 
-import de.htwg.se.juraePuzz.model.gridBaseImpl.{Grid, Solver}
+import de.htwg.se.juraePuzz.model.gridBaseImpl.{Grid, Matrix, Piece, Solver}
 import org.junit.runner.RunWith
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
@@ -9,8 +9,9 @@ import org.scalatest.junit.JUnitRunner
 class SolverSpec extends WordSpec with Matchers {
 
   "A Solver" should {
-    val grid = new Grid(2)
+    val grid = new Grid(new Matrix[Piece](Vector(Vector(Piece(0), Piece(0)), Vector(Piece(0), Piece(0)))))
     val solver = new Solver(grid)
+    println(solver)
     "generate out of a matrix a Level" in {
       solver.solve().s should be (Array(0,0,0,0))
     }

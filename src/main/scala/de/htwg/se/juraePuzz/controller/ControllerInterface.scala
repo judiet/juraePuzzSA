@@ -24,8 +24,6 @@ trait ControllerInterface extends Publisher {
 
   def solve(): Unit
 
-  def create_Level(l:Level): Unit
-
   def save: Unit
 
   def load: Unit
