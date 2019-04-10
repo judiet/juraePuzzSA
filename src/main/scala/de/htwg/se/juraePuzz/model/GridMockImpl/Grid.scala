@@ -16,7 +16,7 @@ class Grid extends GridInterface {
 
   def checkMove(xS: Int, yS: Int, xT: Int, yT: Int): Boolean = true
 
-  def getLevel(): Level = Level(Array(1, 2, 3, 4))
+  def getLevel(): Option[Level] = Some(Level(Array(1, 2, 3, 4)))
 
   def solve(): Unit = {}
 
