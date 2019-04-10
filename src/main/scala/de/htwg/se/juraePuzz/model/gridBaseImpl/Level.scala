@@ -6,7 +6,7 @@ case class Level(s:Array[Int]){
   override def toString: String = {
     val str = new StringBuilder
 
-    for (i <- 0 until s.length){
+    for (i <- s.indices){
       str.append(s(i))
       if ((i + 1) % Math.sqrt(s.length) == 0) {
         str.append("\n")
