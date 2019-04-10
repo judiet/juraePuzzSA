@@ -5,7 +5,6 @@ import com.google.inject.name.Names
 import de.htwg.se.juraePuzz.JuraePuzzModule
 import de.htwg.se.juraePuzz.model.GridInterface
 import de.htwg.se.juraePuzz.model.fileIoComponent.FileIOInterface
-import de.htwg.se.juraePuzz.model.gridBaseImpl.{Piece, Rotation}
 import net.codingwell.scalaguice.InjectorExtensions._
 import play.api.libs.json._
 
@@ -25,14 +24,14 @@ class FileIO extends FileIOInterface {
     }
     gridOption match {
       case Some(grid) => {
-        var _grid = grid
+        val _grid = grid
         for (index <- 0 until size * size) {
           val row = (json \\ "row") (index).as[Int]
           val col = (json \\ "col") (index).as[Int]
           val value = (json \\ "value") (index).as[Int]
-          _grid.set(row, col,value)
+          _grid.set(row, col, value)
         }
-        gridOption=Some(_grid)
+        gridOption = Some(_grid)
       }
       case None =>
     }
@@ -50,16 +49,16 @@ class FileIO extends FileIOInterface {
     Json.obj(
       "grid" -> Json.obj(
         "size" -> JsNumber(grid.size)),
-        "cells" -> Json.toJson(
-          for {row <- 0 until grid.size;
-               col <- 0 until grid.size} yield {
-            Json.obj(
-              "row" -> row,
-              "col" -> col,
-              "value" -> JsNumber(grid.cell(row, col).value))
-          }
-        )
+      "cells" -> Json.toJson(
+        for {row <- 0 until grid.size;
+             col <- 0 until grid.size} yield {
+          Json.obj(
+            "row" -> row,
+            "col" -> col,
+            "value" -> JsNumber(grid.cell(row, col).value))
+        }
       )
+    )
   }
 
 }
