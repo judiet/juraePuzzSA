@@ -7,8 +7,6 @@ import de.htwg.se.juraePuzz.model.GridInterface
 case class Grid(matrix: Matrix[Piece]) extends GridInterface {
   def this(size: Int) = this(new Matrix[Piece](size, Piece(0)))
 
-  //val matrix = Matrix(size)
-
   val size: Int = matrix.size
 
   def createNewGrid: GridInterface = (new GetSpecifiedLevel).createNewGrid(size)
