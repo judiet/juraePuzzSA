@@ -64,6 +64,12 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     //grid.solve()
     val solverNew = new Solver(grid)
 
+    print(solverNew.geolState() == solverNew.getCurrentState())
+    while (solverNew.geolState() != solverNew.getCurrentState()){
+
+      println(grid.mapMoveToDirection(solverNew.makeMove()))
+    }
+
     gameStatus = SOLVED
     toggleShow()
   }

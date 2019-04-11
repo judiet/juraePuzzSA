@@ -2,7 +2,7 @@ package de.htwg.se.juraePuzz.model.gridBaseImpl
 
 import de.htwg.se.juraePuzz.model.GridInterface
 
-import scala.util.Sorting
+import scala.util.{Random, Sorting}
 
 class Solver(grid: GridInterface) {
 
@@ -28,7 +28,29 @@ class Solver(grid: GridInterface) {
           _ == _
         }
     }
-
   }
+
+  def geolState(): GridInterface ={
+    val grid = new Grid(new Matrix[Piece](Vector(
+      Vector(Piece(0), Piece(0),Piece(0)),
+      Vector(Piece(0), Piece(0),Piece(0)),
+      Vector(Piece(0), Piece(0),Piece(0)))))
+    grid
+  }
+
+  def getCurrentState(): GridInterface ={
+    grid
+  }
+
+  def makeMove(): Direction.Value ={
+
+    //while (getCurrentState() != geolState()){
+      val move = Direction(Random.nextInt(Direction.maxId));
+    return move
+    //}
+  }
+
+
+
 
 }

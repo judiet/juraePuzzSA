@@ -165,4 +165,5 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
     }
     None
   }
+
 }
