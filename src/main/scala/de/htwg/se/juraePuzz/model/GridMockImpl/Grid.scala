@@ -1,7 +1,7 @@
 package de.htwg.se.juraePuzz.model.GridMockImpl
 
 import de.htwg.se.juraePuzz.model.GridInterface
-import de.htwg.se.juraePuzz.model.gridBaseImpl.{Level, Matrix, Piece}
+import de.htwg.se.juraePuzz.model.gridBaseImpl.{Direction, Level, Matrix, Piece}
 
 class Grid extends GridInterface {
   def empty(): Unit = {}
@@ -12,7 +12,7 @@ class Grid extends GridInterface {
 
   //override def fill(l: Level): Boolean = true
 
-  def move(xS: Int, yS: Int, xT: Int, yT: Int): GridInterface = this
+  def move(xS: Int, yS: Int, xT: Int, yT: Int): Option[GridInterface] = None
 
   def checkMove(xS: Int, yS: Int, xT: Int, yT: Int): Boolean = true
 
@@ -29,4 +29,6 @@ class Grid extends GridInterface {
   def createNewGrid: GridInterface = this
 
   def setMove(row: Int, col: Int, value: Int, row1: Int, col1: Int, value1: Int): GridInterface = this
+
+  def mapMoveToDirection(direction: Direction.Value): Option[GridInterface] = None
 }

@@ -19,10 +19,11 @@ case class Matrix[T](rows: Vector[Vector[T]]) {
   }
 
   def replaceCells(row: Int, col: Int, cell: T, row1: Int, col1: Int, cell1: T): Matrix[T] = {
-    var s = rows.updated(row, rows(row).updated(col, cell))
-    s = s.updated(row1, s(row1).updated(col1, cell1))
-    copy(s)
+    val s = rows.updated(row, rows(row).updated(col, cell))
+    val tmp = s.updated(row1, s(row1).updated(col1, cell1))
+    copy(tmp)
   }
+
 
   //def get(row:Int, col:Int) = matrix(row)(col)
 }

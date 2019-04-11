@@ -50,7 +50,7 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.createEmptyGrid()
       //controller.create_Level(Level(Array(1,2,0,3)))
       val c2 = new Controller(new Grid(new Matrix[Piece](Vector(Vector(Piece(1), Piece(2)), Vector(Piece(0), Piece(3))))))
-      c2.move(1, 1, 1, 0)
+      //c2.move(1, 1, 1, 0)
       c2.gameStatus should be (GameStatus.SOLVED)
     }
 
@@ -58,7 +58,7 @@ class ControllerSpec extends WordSpec with Matchers {
     "should have status not solved yet" in {
       controller.createEmptyGrid()
       val c1 = new Controller(new Grid(new Matrix[Piece](Vector(Vector(Piece(1), Piece(0)), Vector(Piece(2), Piece(3))))))
-      c1.move(1, 1, 0, 1)
+     // c1.move(1, 1, 0, 1)
       c1.gameStatus should be (GameStatus.NOT_SOLVED_YET)
     }
 

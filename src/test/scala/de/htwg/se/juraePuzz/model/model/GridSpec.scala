@@ -10,7 +10,7 @@ class GridSpec extends WordSpec with Matchers {
   "A grid" should {
     val g = new Grid(2)
     "have a size" in {
-      g.getSize() should be(2)
+      g.size should be(2)
     }
     "have Pieces" in {
       g.empty()
@@ -23,7 +23,7 @@ class GridSpec extends WordSpec with Matchers {
     "have Curves" in {
 
       val g = new Grid(new Matrix[Piece](Vector(Vector(Piece(1), Piece(1)), Vector(Piece(1), Piece(1)))))
-      for (i <- 0 until g.getSize(); j <- 0 until g.getSize()){
+      for (i <- 0 until g.size; j <- 0 until g.size){
         g.set(i, j,1)
       }
       g.matrix.cell(0, 0) should be(Piece(1))
@@ -43,11 +43,20 @@ class GridSpec extends WordSpec with Matchers {
     }
     "move correct" in {
       val g = new Grid(new Matrix[Piece](Vector(Vector(Piece(1), Piece(0)), Vector(Piece(0), Piece(0)))))
-      g.move(0, 0, 0, 1) should be (new Grid(new Matrix[Piece](Vector(Vector(Piece(0), Piece(1)), Vector(Piece(0), Piece(0))))))
+      g.move(0, 0, 0, 1) match {
+        case Some(value)=> value should be (new Grid(new Matrix[Piece](Vector(Vector(Piece(0), Piece(1)), Vector(Piece(0), Piece(0))))))
+        case None=>
+      }
       g.matrix.cell(0,0) should be(Piece(1))
       g.matrix.cell(0, 1) should be (Piece(0))
-      g.move(0,0, 1,0) should be (new Grid(new Matrix[Piece](Vector(Vector(Piece(0), Piece(0)), Vector(Piece(1), Piece(0))))))
-      g.move(0, 0, 1, -1) should be (new Grid(0))
+      g.move(0,0, 1,0) match {
+        case Some(grid) => grid should be (new Grid(new Matrix[Piece](Vector(Vector(Piece(0), Piece(0)), Vector(Piece(1), Piece(0))))))
+        case None=>
+      }
+      g.move(0, 0, 1, -1) match {
+        case Some(grid)=> grid should be (new Grid(0))
+        case None=>
+      }
 
     }
     /*"generateGrid with Level" in {

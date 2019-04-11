@@ -1,6 +1,6 @@
 package de.htwg.se.juraePuzz.model
 
-import de.htwg.se.juraePuzz.model.gridBaseImpl.{Level, Piece}
+import de.htwg.se.juraePuzz.model.gridBaseImpl._
 
 import scala.swing.Publisher
 
@@ -24,14 +24,14 @@ trait GridInterface extends Publisher {
 
   //def fill(grid: GridInterface) : GridInterface
 
-  def move(xS: Int, yS: Int, xT: Int, yT: Int): GridInterface
+  def move(xS: Int, yS: Int, xT: Int, yT: Int): Option[GridInterface]
 
   def checkMove(xS: Int, yS: Int, xT: Int, yT: Int): Boolean
 
   def getLevel(): Option[Level]
 
-  def solve(): Unit
-
-
   def createNewGrid: GridInterface
+
+  def mapMoveToDirection(direction: Direction.Value): Option[GridInterface]
+
 }

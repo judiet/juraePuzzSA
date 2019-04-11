@@ -6,20 +6,22 @@ class GetSpecifiedLevel extends LevelGenerateStrategyTemplate {
 
   def createNewGrid(size: Int): GridInterface = {
     var grid: GridInterface = new Grid(size)
-    grid = fill(grid)
+    grid = fill(grid) match {
+      case Some(grid) => grid
+    }
     grid
   }
 
-  def fill(_grid: GridInterface): GridInterface = {
+  def fill(_grid: GridInterface): Option[GridInterface] = {
+    val num = Math.sqrt(9).toInt
     var grid: GridInterface = new Grid(_grid.size)
-    val level = createLevel(_grid)
-    level match{
-      case Some(l) => l
+    val level = createLevel(_grid) match {
+      case Some(level) => level
         for (i <- 0 until _grid.size; j <- 0 until _grid.size) {
-          grid = grid.set(i, j, l.s(j + i * grid.size))
+          grid = grid.set(i, j, level.s(j + i * grid.size))
         }
     }
-    grid
+    Some(grid)
   }
 
   def createLevel(grid: GridInterface): Option[Level] = {

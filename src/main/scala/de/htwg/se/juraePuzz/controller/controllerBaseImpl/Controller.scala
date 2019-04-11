@@ -21,6 +21,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
   val injector = Guice.createInjector(new JuraePuzzModule)
   val fileIo = injector.instance[FileIOInterface]
 
+
   //def isSet(row: Int, col: Int): Boolean = grid.cell(row, col).isSet
 
   def cell(row: Int, col: Int) = grid.cell(row, col)
@@ -37,11 +38,10 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
         gameStatus = CREATE_LEVEL
       }
       toggleShow()
-
     }
   */
-  def move(xS: Int, yS: Int, xT: Int, yT: Int): Unit = {
-    undoManager.doStep(new SetCommand(xS, yS, xT, yT, this))
+  def move(direction: Direction.Value): Unit = {
+    undoManager.doStep(new SetCommand(direction, this))
     if (new Solver(grid).check_level()) {
       gameStatus = SOLVED
     } else {
@@ -61,7 +61,15 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
   }
 
   def solve(): Unit = {
-    grid.solve()
+    //grid.solve()
+    val solverNew = new Solver(grid)
+
+    print(solverNew.geolState() == solverNew.getCurrentState())
+    while (solverNew.geolState() != solverNew.getCurrentState()){
+
+      println(grid.mapMoveToDirection(solverNew.makeMove()))
+    }
+
     gameStatus = SOLVED
     toggleShow()
   }

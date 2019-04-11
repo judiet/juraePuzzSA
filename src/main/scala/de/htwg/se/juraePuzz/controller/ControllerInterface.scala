@@ -2,7 +2,7 @@ package de.htwg.se.juraePuzz.controller
 
 
 import de.htwg.se.juraePuzz.controller.GameStatus.GameStatus
-import de.htwg.se.juraePuzz.model.gridBaseImpl.{Grid, Level, Matrix, Piece}
+import de.htwg.se.juraePuzz.model.gridBaseImpl._
 
 import scala.swing.Publisher
 
@@ -16,7 +16,7 @@ trait ControllerInterface extends Publisher {
 
   def statusText: String
 
-  def move(xS:Int, yS:Int, xT:Int, yT:Int): Unit
+  def move(direction:Direction.Value): Unit
 
   def undo: Unit
 
