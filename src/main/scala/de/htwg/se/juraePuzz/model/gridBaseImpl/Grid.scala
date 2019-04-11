@@ -1,7 +1,5 @@
 package de.htwg.se.juraePuzz.model.gridBaseImpl
 
-import com.google.inject.Inject
-import com.google.inject.name.Named
 import de.htwg.se.juraePuzz.model.GridInterface
 
 case class Grid(matrix: Matrix[Piece]) extends GridInterface {
@@ -27,7 +25,7 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
     val sb = new StringBuilder()
     for (i <- 0 until matrix.size; j <- 0 until matrix.size) {
       sb.append(matrix.cell(i, j).value)
-      if (j == matrix.size - 1) {
+      if ( j == matrix.size - 1 ) {
         sb.append("\n")
       }
     }
@@ -68,32 +66,32 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
   }
 
   def checkMove(xS: Int, yS: Int, xT: Int, yT: Int): Boolean = {
-    if (xS >= matrix.size || xT >= matrix.size || yS >= matrix.size || yT >= matrix.size) {
+    if ( xS >= matrix.size || xT >= matrix.size || yS >= matrix.size || yT >= matrix.size ) {
       return false
     }
 
-    if (xS < 0 || yS < 0 || xT < 0 || yT < 0) {
+    if ( xS < 0 || yS < 0 || xT < 0 || yT < 0 ) {
       return false
     }
 
     val pT = matrix.cell(xT, yT)
     val pS = matrix.cell(xS, yS)
 
-    if (pS.value == 0) {
+    if ( pS.value == 0 ) {
       return false
     }
 
-    if (xS == xT) {
-      if (yS - yT == -1 || yS - yT == 1) {
-        if (pT.value == 0) {
+    if ( xS == xT ) {
+      if ( yS - yT == -1 || yS - yT == 1 ) {
+        if ( pT.value == 0 ) {
           return true
         }
       }
     }
 
-    if (yS == yT) {
-      if (xS - xT == -1 || xS - xT == 1) {
-        if (pT.value == 0) {
+    if ( yS == yT ) {
+      if ( xS - xT == -1 || xS - xT == 1 ) {
+        if ( pT.value == 0 ) {
           return true
         }
       }

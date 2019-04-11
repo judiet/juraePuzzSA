@@ -18,9 +18,11 @@ class Solver(grid: GridInterface) {
     sb(sb.length - 1) = 0
 
     Level(sb)
+
   }
 
   def check_level(): Boolean = {
+
     val level = grid.getLevel()
     level match {
       case Some(l) =>
