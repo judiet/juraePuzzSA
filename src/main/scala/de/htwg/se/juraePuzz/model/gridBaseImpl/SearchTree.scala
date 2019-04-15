@@ -15,7 +15,7 @@ trait SearchTree[M] {
   type Insert[A] = (List[Path[A]], List[Path[A]]) => List[Path[A]]
 
   def generalSearch(insertNew: Insert[M]): List[M] = {
-    var fringe = List[Path[M]](Pair(List[M](), this))
+    var fringe = List[Path[M]]((List[M](), this))
 
     var result: List[M] = null
     while (!fringe.isEmpty && result == null) {
@@ -24,7 +24,7 @@ trait SearchTree[M] {
       else {
         val headsChildren
         = for (m <- headState.moves())
-          yield Pair(m :: ms, headState.move(m))
+          yield (m :: ms, headState.move(m))
         fringe = insertNew(fringeTail, headsChildren)
       }
     }

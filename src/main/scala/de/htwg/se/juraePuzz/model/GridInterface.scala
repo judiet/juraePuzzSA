@@ -34,4 +34,6 @@ trait GridInterface extends Publisher {
 
   def mapMoveToDirection(direction: Direction.Value): Option[GridInterface]
 
+  def posMoves():List[Direction.Value]
+
 }

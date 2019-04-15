@@ -42,11 +42,11 @@ class PiecePanel(row: Int, column: Int, controller: ControllerInterface) extends
           //controller.move(row, column, row - 1, column)
         }
         if (column - 1 >= 0 && controller.cell(row, column - 1).value == 0) {
-          controller.move(Direction.Left)
+          controller.move(Direction.Right)
           //controller.move(row, column, row, column - 1)
         }
         if (column + 1 < controller.gridSize && controller.cell(row, column + 1).value == 0) {
-          controller.move(Direction.Right)
+          controller.move(Direction.Left)
           //controller.move(row, column, row, column + 1)
         }
         if (row + 1 < controller.gridSize && controller.cell(row + 1, column).value == 0) {

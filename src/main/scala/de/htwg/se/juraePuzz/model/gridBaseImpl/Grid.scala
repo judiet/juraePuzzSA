@@ -143,12 +143,12 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
           case None =>
         }
       case Direction.Left =>
-        helper(row, col + 1, row, col) match {
+        helper(row, col - 1, row, col) match {
           case Some(value) => return Some(value)
           case None =>
         }
       case Direction.Right =>
-        helper(row, col - 1, row, col) match {
+        helper(row, col + 1, row, col) match {
           case Some(value) => return Some(value)
           case None =>
         }
@@ -164,6 +164,22 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
       return Some(grid)
     }
     None
+  }
+
+
+  def posMoves():List[Direction.Value]={
+    val value = findNullValue() match {
+      case Some(value) => value
+      case None => (0, 0)
+    }
+    val row = value._1
+    val col = value._2
+    var result=List[Direction.Value]()
+    if (row>0)      result=Direction.Up::result
+    if (row<size -1) result=Direction.Down::result
+    if (col>0)      result=Direction.Left::result
+    if (col<size-1) result=Direction.Right::result
+    result
   }
 
 }

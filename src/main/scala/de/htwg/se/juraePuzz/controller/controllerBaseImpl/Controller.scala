@@ -12,6 +12,7 @@ import de.htwg.se.juraePuzz.model.fileIoComponent.FileIOInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl._
 import de.htwg.se.juraePuzz.util._
 
+import scala.concurrent.Future
 import scala.swing.Publisher
 
 class Controller @Inject()(var grid: GridInterface) extends ControllerInterface with Publisher {
@@ -41,7 +42,10 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     }
   */
   def move(direction: Direction.Value): Unit = {
-    undoManager.doStep(new SetCommand(direction, this))
+     undoManager.doStep(new SetCommand(direction, this)) match{
+      case Some(value)=> grid = value
+      case None=> gameStatus = ILLEGAL_TURN
+    }
     if (new Solver(grid).check_level()) {
       gameStatus = SOLVED
     } else {
@@ -63,13 +67,11 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
   def solve(): Unit = {
     //grid.solve()
     val solverNew = new Solver(grid)
-
-    print(solverNew.geolState() == solverNew.getCurrentState())
-    while (solverNew.geolState() != solverNew.getCurrentState()){
-
-      println(grid.mapMoveToDirection(solverNew.makeMove()))
+    solverNew.getPosMoves()
+    solverNew.search() match {
+      case Some(value)=> grid = value
+      case None=> gameStatus = NOT_SOLVED_YET
     }
-
     gameStatus = SOLVED
     toggleShow()
   }
