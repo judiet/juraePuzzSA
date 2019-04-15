@@ -6,10 +6,10 @@ import de.htwg.se.juraePuzz.util.Command
 
 class SetCommand(direction:Direction.Value, controller: Controller) extends Command {
 
-  override def doStep: Unit = controller.grid = {
+  override def doStep: Option[GridInterface] = {
     controller.grid.mapMoveToDirection(direction) match {
-      case Some(grid) => grid
-      case None=> new Grid(0)
+      case Some(grid) => Some(grid)
+      case None=>None
     }
   }
 

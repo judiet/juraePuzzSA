@@ -35,42 +35,43 @@ class ControllerSpec extends WordSpec with Matchers {
       controller.grid.toString() should be (controller.grid.getLevel().toString)
     }*/
     "should have status solved" in {
-      controller.createEmptyGrid()
-      controller.createNewGrid
-      val solver = new Solver(controller.grid)
-      controller.solve()
-      controller.gameStatus should be (GameStatus.SOLVED)
+      val c3 = new Controller(new Grid(new Matrix[Piece](Vector(
+        Vector(Piece(1), Piece(2), Piece(3)),
+        Vector(Piece(4), Piece(5), Piece(6)),
+        Vector(Piece(7), Piece(0), Piece(8))))))
+      c3.solve()
+      Thread.sleep(5000)
+      c3.gameStatus should be(GameStatus.SOLVED)
     }
-    "cell" in{
+    "cell" in {
       val c3 = new Controller(new Grid(new Matrix[Piece](Vector(Vector(Piece(0), Piece(0)), Vector(Piece(0), Piece(0))))))
-      c3.grid.set(0,0,0)
+      c3.grid.set(0, 0, 0)
       c3.grid.cell(0, 0) should be(Piece(0))
     }
     "should have status solved with move" in {
       controller.createEmptyGrid()
       //controller.create_Level(Level(Array(1,2,0,3)))
       val c2 = new Controller(new Grid(new Matrix[Piece](Vector(Vector(Piece(1), Piece(2)), Vector(Piece(0), Piece(3))))))
-      //c2.move(1, 1, 1, 0)
-      c2.gameStatus should be (GameStatus.SOLVED)
+      c2.move(Direction.Right)
+      c2.gameStatus should be(GameStatus.SOLVED)
     }
 
 
     "should have status not solved yet" in {
       controller.createEmptyGrid()
       val c1 = new Controller(new Grid(new Matrix[Piece](Vector(Vector(Piece(1), Piece(0)), Vector(Piece(2), Piece(3))))))
-     // c1.move(1, 1, 0, 1)
-      c1.gameStatus should be (GameStatus.NOT_SOLVED_YET)
+      c1.move(Direction.Down)
+      c1.gameStatus should be(GameStatus.NOT_SOLVED_YET)
     }
 
-    /*
+
     "undo" in {
-      controller.createEmptyGrid()
-      controller.create_Level(Level(Array(1,2,0,3)))
-      controller.move(1, 1, 1, 0)
-      controller.undo
-      controller.gameStatus should be (GameStatus.NOT_SOLVED_YET)
+      val c5 = new Controller(new Grid(new Matrix[Piece](Vector(Vector(Piece(1), Piece(2)), Vector(Piece(0), Piece(3))))))
+      c5.move(Direction.Right)
+      c5.undo
+      c5.gameStatus should be(GameStatus.NOT_SOLVED_YET)
     }
-    */
+
     "gamestatus should have a message" in {
       val gs = GameStatus.IDLE
       GameStatus.message(gs) should be("")
@@ -81,17 +82,17 @@ class ControllerSpec extends WordSpec with Matchers {
     }
     "redo" in {
       controller.redo
-      controller.gameStatus should be (GameStatus.SOLVED)
+      controller.gameStatus should be(GameStatus.SOLVED)
     }
     "save a game" in {
       controller.createEmptyGrid()
       controller.createNewGrid
       controller.save
-      controller.gameStatus should be (GameStatus.SAVED)
+      controller.gameStatus should be(GameStatus.SAVED)
     }
-    "not load a game"in{
+    "not load a game" in {
       controller.load
-      controller.gameStatus should be (GameStatus.COULDNOTLOAD)
+      controller.gameStatus should be(GameStatus.COULDNOTLOAD)
     }
     /*
     "load a game" in {

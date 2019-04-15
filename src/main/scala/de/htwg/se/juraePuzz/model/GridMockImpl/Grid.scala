@@ -31,4 +31,6 @@ class Grid extends GridInterface {
   def setMove(row: Int, col: Int, value: Int, row1: Int, col1: Int, value1: Int): GridInterface = this
 
   def mapMoveToDirection(direction: Direction.Value): Option[GridInterface] = None
+
+  override def posMoves(): List[Direction.Value] = List.empty
 }

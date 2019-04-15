@@ -12,7 +12,10 @@ import de.htwg.se.juraePuzz.model.fileIoComponent.FileIOInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl._
 import de.htwg.se.juraePuzz.util._
 
+import scala.concurrent.{ExecutionContext, Future}
 import scala.swing.Publisher
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
 class Controller @Inject()(var grid: GridInterface) extends ControllerInterface with Publisher {
 
@@ -41,7 +44,10 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     }
   */
   def move(direction: Direction.Value): Unit = {
-    undoManager.doStep(new SetCommand(direction, this))
+    undoManager.doStep(new SetCommand(direction, this)) match {
+      case Some(value) => grid = value
+      case None => gameStatus = ILLEGAL_TURN
+    }
     if (new Solver(grid).check_level()) {
       gameStatus = SOLVED
     } else {
@@ -64,14 +70,25 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     //grid.solve()
     val solverNew = new Solver(grid)
 
-    print(solverNew.geolState() == solverNew.getCurrentState())
-    while (solverNew.geolState() != solverNew.getCurrentState()){
-
-      println(grid.mapMoveToDirection(solverNew.makeMove()))
+    val f = Future {
+      solverNew.dfsMutableIterative(grid)
     }
 
-    gameStatus = SOLVED
-    toggleShow()
+    f.onComplete {
+      case Success(value) => {
+        grid = value
+        println("dsawdew")
+        gameStatus = SOLVED
+        toggleShow()
+      }
+
+      case Failure(exception) => {
+        println("safwsfcedws")
+        gameStatus = ERROR
+        println("Error " + exception)
+      }
+    }
+
   }
 
   def save: Unit = {

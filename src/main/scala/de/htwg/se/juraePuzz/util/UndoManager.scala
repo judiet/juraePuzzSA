@@ -1,9 +1,11 @@
 package de.htwg.se.juraePuzz.util
 
+import de.htwg.se.juraePuzz.model.GridInterface
+
 class UndoManager {
   private var undoStack: List[Command]= Nil
   private var redoStack: List[Command]= Nil
-  def doStep(command: Command): Unit = {
+  def doStep(command: Command): Option[GridInterface] = {
     undoStack = command::undoStack
     command.doStep
   }
