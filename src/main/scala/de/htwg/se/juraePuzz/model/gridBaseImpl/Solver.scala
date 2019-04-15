@@ -44,14 +44,6 @@ class Solver(grid: GridInterface) {
     grid
   }
 
-  def getCurrentState(): GridInterface = {
-    grid
-  }
-
-  def getPosMoves(): Unit = {
-    val x = grid.posMoves()
-  }
-
   def dfsMutableIterative(start: GridInterface): GridInterface = {
     var current: GridInterface = start
     val found: mutable.Set[GridInterface] = mutable.Set[GridInterface]()
