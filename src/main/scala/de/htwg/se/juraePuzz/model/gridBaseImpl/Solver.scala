@@ -1,8 +1,11 @@
 package de.htwg.se.juraePuzz.model.gridBaseImpl
 
+import akka.actor.Status.Success
+import akka.pattern.FutureRef
 import de.htwg.se.juraePuzz.model.GridInterface
 
 import scala.collection.mutable
+import scala.concurrent.Future
 import scala.util.{Random, Sorting}
 
 class Solver(grid: GridInterface) {
@@ -49,16 +52,7 @@ class Solver(grid: GridInterface) {
     val x = grid.posMoves()
   }
 
-  def search(): Option[GridInterface] ={
-    var besucht = List.empty[GridInterface]
-    var gridSaved = getCurrentState()
-    dfsMutableIterative(grid) match {
-      case Some(value)=> Some(value)
-      case None=> None
-    }
-  }
-
-  def dfsMutableIterative(start: GridInterface): Option[GridInterface] = {
+  def dfsMutableIterative(start: GridInterface): GridInterface = {
     var current: GridInterface = start
     val found: mutable.Set[GridInterface] = mutable.Set[GridInterface]()
     val stack: mutable.Stack[GridInterface] = mutable.Stack[GridInterface]()
@@ -72,14 +66,13 @@ class Solver(grid: GridInterface) {
           for (next <- current.mapMoveToDirection(m)) {
             stack.push(next)
             if(geolState() == next){
-             println(next)
-             return Some(next)
+             return next
             }
           }
         }
       }
     }
-    None
+    throw new Exception("Not solved Sorry")
   }
   /*
     def searchR(besucht:List[GridInterface],grid: GridInterface,goal: GridInterface): Unit = {
