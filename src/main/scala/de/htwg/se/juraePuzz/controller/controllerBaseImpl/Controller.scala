@@ -10,9 +10,10 @@ import de.htwg.se.juraePuzz.model.fileIoComponent.FileIOInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl._
 import de.htwg.se.juraePuzz.util._
 import net.codingwell.scalaguice.InjectorExtensions._
+import scala.math
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.swing.Publisher
 import scala.util.{Failure, Success}
 
@@ -65,14 +66,31 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     toggleShow
   }
 
+  def isSolved(): Unit = {
+    while (gameStatus != GameStatus.SOLVED){}
+  }
+
+
+  def timer(): Unit = {
+    var timerStart: Long = 0
+    val t = Future {
+      timerStart = System.nanoTime()
+      isSolved()
+    }
+    t.onComplete {
+      case Success(value) => {
+        val resulttime = (System.nanoTime() - timerStart) * math.pow(10, -9)
+        printf("Time: %.0fs", resulttime)
+      }
+      case Failure(e) =>
+        println("Error: " + e)
+    }
+  }
+
   def solve(): Unit = {
     //grid.solve()
     val solverNew = new Solver(grid)
 
-    val t = Future{
-      val timer = Await.
-    }
-    t.onComplete()
 
     val f = Future {
       solverNew.dfsMutableIterative(grid)
@@ -131,6 +149,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     grid = grid.createNewGrid
     toggleShow
     gameStatus = GameStatus.CREATE_LEVEL
+    timer()
     publish(new CellChanged)
   }
 
