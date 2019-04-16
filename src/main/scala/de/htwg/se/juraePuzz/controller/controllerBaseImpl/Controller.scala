@@ -77,13 +77,11 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     f.onComplete {
       case Success(value) => {
         grid = value
-        println("dsawdew")
         gameStatus = SOLVED
         toggleShow()
       }
 
       case Failure(exception) => {
-        println("safwsfcedws")
         gameStatus = ERROR
         println("Error " + exception)
       }
