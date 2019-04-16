@@ -1,20 +1,20 @@
 package de.htwg.se.juraePuzz.controller.controllerBaseImpl
 
-import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject}
-import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.juraePuzz.JuraePuzzModule
 import de.htwg.se.juraePuzz.aview.Gui.CellChanged
-import de.htwg.se.juraePuzz.controller._
 import de.htwg.se.juraePuzz.controller.GameStatus._
+import de.htwg.se.juraePuzz.controller._
 import de.htwg.se.juraePuzz.model.GridInterface
 import de.htwg.se.juraePuzz.model.fileIoComponent.FileIOInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl._
 import de.htwg.se.juraePuzz.util._
+import net.codingwell.scalaguice.InjectorExtensions._
+import scala.math
 
-import scala.concurrent.{ExecutionContext, Future}
-import scala.swing.Publisher
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.swing.Publisher
 import scala.util.{Failure, Success}
 
 class Controller @Inject()(var grid: GridInterface) extends ControllerInterface with Publisher {
@@ -27,9 +27,9 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
 
   //def isSet(row: Int, col: Int): Boolean = grid.cell(row, col).isSet
 
-  def cell(row: Int, col: Int) = grid.cell(row, col)
+  def cell(row: Int, col: Int): Piece = grid.cell(row, col)
 
-  def toggleShow() = publish(new CellChanged)
+  def toggleShow(): Unit = publish(new CellChanged)
 
   def statusText: String = GameStatus.message(gameStatus)
 
@@ -48,7 +48,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
       case Some(value) => grid = value
       case None => gameStatus = ILLEGAL_TURN
     }
-    if (new Solver(grid).check_level()) {
+    if ( new Solver(grid).check_level() ) {
       gameStatus = SOLVED
     } else {
       gameStatus = NOT_SOLVED_YET
@@ -66,9 +66,31 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     toggleShow
   }
 
+  def isSolved(): Unit = {
+    while (gameStatus != GameStatus.SOLVED){}
+  }
+
+
+  def timer(): Unit = {
+    var timerStart: Long = 0
+    val t = Future {
+      timerStart = System.nanoTime()
+      isSolved()
+    }
+    t.onComplete {
+      case Success(value) => {
+        val resulttime = (System.nanoTime() - timerStart) * math.pow(10, -9)
+        printf("Time: %.0fs", resulttime)
+      }
+      case Failure(e) =>
+        println("Error: " + e)
+    }
+  }
+
   def solve(): Unit = {
     //grid.solve()
     val solverNew = new Solver(grid)
+
 
     val f = Future {
       solverNew.dfsMutableIterative(grid)
@@ -127,6 +149,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     grid = grid.createNewGrid
     toggleShow
     gameStatus = GameStatus.CREATE_LEVEL
+    timer()
     publish(new CellChanged)
   }
 
