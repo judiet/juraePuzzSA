@@ -49,16 +49,15 @@ class Solver(grid: GridInterface) {
     val found: mutable.Set[GridInterface] = mutable.Set[GridInterface]()
     val stack: mutable.Stack[GridInterface] = mutable.Stack[GridInterface]()
     stack.push(current)
-
     while (!stack.isEmpty) {
       current = stack.pop()
       if (!found.contains(current)) {
         found += current
-        for(m <- current.posMoves()){
+        for (m <- current.posMoves()) {
           for (next <- current.mapMoveToDirection(m)) {
             stack.push(next)
-            if(geolState() == next){
-             return next
+            if (geolState() == next) {
+              return next
             }
           }
         }
@@ -66,26 +65,4 @@ class Solver(grid: GridInterface) {
     }
     throw new Exception("Not solved Sorry")
   }
-  /*
-    def searchR(besucht:List[GridInterface],grid: GridInterface,goal: GridInterface): Unit = {
-
-
-      //while (geolState() != gridSaved) {
-        println(grid.posMoves())
-        println(grid)
-        for (m <- grid.posMoves()) {
-          if (!besucht.contains(grid)) {
-            besucht = grid :: besucht
-            println(besucht)
-            grid.mapMoveToDirection(m) match {
-             case Some(value)=> grid = value
-             case None=> None
-           }
-            println(grid)
-          }
-        }
-      //}
-
-    }*/
-
 }
