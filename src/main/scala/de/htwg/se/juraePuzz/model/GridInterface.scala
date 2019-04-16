@@ -13,7 +13,7 @@ trait GridInterface extends Publisher {
   override def toString(): String
 
   def set(row: Int, col: Int, value: Int): GridInterface
-
+  def copyGrid(): GridInterface
   def setMove(row: Int, col: Int, value: Int, row1: Int, col1: Int, value1: Int): GridInterface
 
   def cell(row: Int, col: Int): Piece

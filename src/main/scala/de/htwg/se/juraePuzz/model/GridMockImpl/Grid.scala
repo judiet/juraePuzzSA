@@ -33,4 +33,6 @@ class Grid extends GridInterface {
   def mapMoveToDirection(direction: Direction.Value): Option[GridInterface] = None
 
   override def posMoves(): List[Direction.Value] = List.empty
+
+  override def copyGrid(): GridInterface = this
 }

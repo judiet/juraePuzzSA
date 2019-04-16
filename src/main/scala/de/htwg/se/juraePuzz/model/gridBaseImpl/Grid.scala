@@ -13,6 +13,10 @@ case class Grid(matrix: Matrix[Piece]) extends GridInterface {
     copy(matrix.replaceCell(row, col, Piece(value)))
   }
 
+  def copyGrid(): Grid = {
+    copy(matrix)
+  }
+
   def cell(row: Int, col: Int): Piece = matrix.cell(row, col)
 
   def empty(): Unit = {
