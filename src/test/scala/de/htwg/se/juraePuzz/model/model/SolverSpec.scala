@@ -7,7 +7,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class SolverSpec extends WordSpec with Matchers {
-
+ /*
   "A Solver" should {
     val grid = new Grid(new Matrix[Piece](Vector(Vector(Piece(0), Piece(0)), Vector(Piece(0), Piece(0)))))
     val solver = new Solver(grid)
@@ -18,6 +18,6 @@ class SolverSpec extends WordSpec with Matchers {
     "checks that the current matirx ist solved or not" in {
       solver.check_level() should be (true)
     }
-  }
+  }*/
 }
 

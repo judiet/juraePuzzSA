@@ -1,14 +1,15 @@
 package de.htwg.se.juraePuzz.model.gridBaseImpl
 
-import akka.actor.Status.Success
-import akka.pattern.FutureRef
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import de.htwg.se.juraePuzz.controller.controllerBaseImpl.Controller
+import de.htwg.se.juraePuzz.controller.controllerBaseImpl.myActor.{PingMessage, StartMessage}
 import de.htwg.se.juraePuzz.model.GridInterface
 
 import scala.collection.mutable
-import scala.concurrent.Future
-import scala.util.{Random, Sorting}
+import scala.util.Sorting
 
-class Solver(grid: GridInterface) {
+
+class Solver(grid: GridInterface, aController: ActorRef) extends Actor {
 
   def solve(): Level = {
     val sb = Array.ofDim[Int](grid.size * grid.size)
@@ -22,7 +23,6 @@ class Solver(grid: GridInterface) {
     sb(sb.length - 1) = 0
 
     Level(sb)
-
   }
 
   def check_level(): Boolean = {
@@ -64,5 +64,20 @@ class Solver(grid: GridInterface) {
       }
     }
     throw new Exception("Not solved Sorry")
+  }
+
+  override def receive: Receive = {
+    case StartMessage(value) =>
+      println("Received Grid ---> Solving" )
+      aController ! PingMessage(dfsMutableIterative(value))
+    /*case PongMessage =>
+      incrementAndPrint
+      if (count > 99) {
+        sender ! StopMessage
+        println("ping stopped")
+        context.stop(self)
+      } else {
+        sender ! PingMessage
+      }*/
   }
 }
