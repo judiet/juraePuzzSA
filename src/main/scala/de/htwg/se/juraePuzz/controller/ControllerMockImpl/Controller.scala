@@ -1,6 +1,7 @@
 package de.htwg.se.juraePuzz.controller.ControllerMockImpl
 
 import de.htwg.se.juraePuzz.controller.{ControllerInterface, GameStatus}
+import de.htwg.se.juraePuzz.model.GridInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl._
 
 class Controller(var grid: Grid) extends ControllerInterface{
@@ -33,4 +34,6 @@ class Controller(var grid: Grid) extends ControllerInterface{
   //override def isSet(row: Int, col: Int): Boolean = true
 
   override def cell(row: Int, col: Int): Piece = Piece(0)
+
+  override def solveActor(value: GridInterface): Unit = this
 }

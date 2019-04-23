@@ -1,29 +1,33 @@
 package de.htwg.se.juraePuzz.controller.controllerBaseImpl
 
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import com.google.inject.{Guice, Inject}
 import de.htwg.se.juraePuzz.JuraePuzzModule
 import de.htwg.se.juraePuzz.aview.Gui.CellChanged
 import de.htwg.se.juraePuzz.controller.GameStatus._
 import de.htwg.se.juraePuzz.controller._
+import de.htwg.se.juraePuzz.controller.controllerBaseImpl.myActor.StartMessage
+import de.htwg.se.juraePuzz.juraePuzz.grid
 import de.htwg.se.juraePuzz.model.GridInterface
 import de.htwg.se.juraePuzz.model.fileIoComponent.FileIOInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl._
 import de.htwg.se.juraePuzz.util._
 import net.codingwell.scalaguice.InjectorExtensions._
-import scala.math
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.swing.Publisher
 import scala.util.{Failure, Success}
 
+
 class Controller @Inject()(var grid: GridInterface) extends ControllerInterface with Publisher {
+
+  import myActor._
 
   var gameStatus: GameStatus = IDLE
   val undoManager = new UndoManager
   val injector = Guice.createInjector(new JuraePuzzModule)
   val fileIo = injector.instance[FileIOInterface]
-
 
   //def isSet(row: Int, col: Int): Boolean = grid.cell(row, col).isSet
 
@@ -33,22 +37,12 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
 
   def statusText: String = GameStatus.message(gameStatus)
 
-  /*
-    def create_Level(): Unit = {
-
-      var st1 = new GetSpecifiedLevel()
-      if (grid.fill(st1.createLevel(this))) {
-        gameStatus = CREATE_LEVEL
-      }
-      toggleShow()
-    }
-  */
   def move(direction: Direction.Value): Unit = {
     undoManager.doStep(new SetCommand(direction, this)) match {
       case Some(value) => grid = value
       case None => gameStatus = ILLEGAL_TURN
     }
-    if ( new Solver(grid).check_level() ) {
+    if (new Solver(grid, actorController).check_level()) {
       gameStatus = SOLVED
     } else {
       gameStatus = NOT_SOLVED_YET
@@ -67,7 +61,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
   }
 
   def isSolved(): Unit = {
-    while (gameStatus != GameStatus.SOLVED){}
+    while (gameStatus != GameStatus.SOLVED) {}
   }
 
 
@@ -87,28 +81,33 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     }
   }
 
+  def solveActor(value: GridInterface)={
+    grid = value
+    gameStatus = SOLVED
+    toggleShow()
+  }
+
   def solve(): Unit = {
     //grid.solve()
-    val solverNew = new Solver(grid)
+    // start them going
+    actorSolver ! StartMessage(grid)
 
-
-    val f = Future {
+    //val solverNew = new Solver(grid,pong)
+    /*val f = Future {
       solverNew.dfsMutableIterative(grid)
-    }
 
+    }
     f.onComplete {
       case Success(value) => {
         grid = value
         gameStatus = SOLVED
         toggleShow()
       }
-
       case Failure(exception) => {
         gameStatus = ERROR
         println("Error " + exception)
       }
-    }
-
+    }*/
   }
 
   def save: Unit = {
@@ -175,5 +174,33 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     gameStatus = GameStatus.CREATE_LEVEL
     publish(new CellChanged)
   }
-  */
+
+*/
+
+  val system = ActorSystem("PingPongSystem")
+  val actorController = system.actorOf(Props(new ControllerActor(this)), name = "pong")
+  val actorSolver = system.actorOf(Props(new Solver(grid,actorController)), name = "ping")
+
+}
+
+
+object myActor {
+
+  case class PingMessage(grid: GridInterface)
+
+  case object PongMessage
+
+  case class StartMessage(grid: GridInterface)
+
+  case object StopMessage
+}
+
+class ControllerActor(c:ControllerInterface) extends Actor {
+  import myActor._
+
+  def receive = {
+    case PingMessage(value) =>
+      println("solved:")
+      c.solveActor(value)
+  }
 }

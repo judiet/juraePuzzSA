@@ -70,6 +70,12 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         case e: MouseClicked => controller.load
       }
     }
+    contents += new Button("Solve") {
+      listenTo(mouse.clicks)
+      reactions += {
+        case e: MouseClicked => controller.solve()
+      }
+    }
 
     contents += new GridPanel(controller.gridSize, controller.gridSize)
   }
