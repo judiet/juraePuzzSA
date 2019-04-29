@@ -47,6 +47,11 @@ class RestApi(controller: ControllerInterface) {
             controller.move(Direction.Down)
             complete(HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, controller.getJsonGrid.toString)))
           }
+        }~ path("solve") {
+          get {
+            controller.solve()
+            complete(HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, controller.getJsonGrid.toString)))
+          }
         }
 
       val bindingFuture = Http().bindAndHandle(route, "localhost", 8888)
