@@ -18,7 +18,6 @@ class RestApi(controller: ControllerInterface) {
 
       implicit val system = ActorSystem("my-system")
       implicit val materializer = ActorMaterializer()
-      // needed for the future flatMap/onComplete in the end
       implicit val executionContext = system.dispatcher
 
       val route =
@@ -28,7 +27,7 @@ class RestApi(controller: ControllerInterface) {
             complete(HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, json.toString)))
           }
         }~ path("left") {
-            post {
+            get {
               controller.move(Direction.Left)
               complete(HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, controller.getJsonGrid.toString)))
             }
@@ -43,10 +42,10 @@ class RestApi(controller: ControllerInterface) {
             complete(HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, controller.getJsonGrid.toString)))
           }
         }~ path("down") {
-          get {
-            controller.move(Direction.Down)
-            complete(HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, controller.getJsonGrid.toString)))
-          }
+            get {
+              controller.move(Direction.Down)
+              complete(HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, controller.getJsonGrid.toString)))
+            }
         }~ path("solve") {
           get {
             controller.solve()
@@ -57,9 +56,9 @@ class RestApi(controller: ControllerInterface) {
       val bindingFuture = Http().bindAndHandle(route, "localhost", 8888)
 
       println(s"Server online at http://localhost:8888/o\nPress RETURN to stop...")
-      StdIn.readLine() // let it run until user presses return
+      StdIn.readLine()
       bindingFuture
-        .flatMap(_.unbind()) // trigger unbinding from the port
-        .onComplete(_ => system.terminate()) // and shutdown when done
+        .flatMap(_.unbind())
+        .onComplete(_ => system.terminate())
     }
 }
