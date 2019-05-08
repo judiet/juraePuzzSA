@@ -4,6 +4,7 @@ package de.htwg.se.juraePuzz.controller
 import de.htwg.se.juraePuzz.controller.GameStatus.GameStatus
 import de.htwg.se.juraePuzz.model.GridInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl._
+import play.api.libs.json.JsValue
 
 import scala.swing.Publisher
 
@@ -38,7 +39,7 @@ trait ControllerInterface extends Publisher {
   //def isSet(row: Int, col: Int): Boolean
   def cell(row: Int, col: Int): Piece
 
-  def solveActor(value: GridInterface):Unit
+  def getJsonGrid:JsValue
 }
 
 

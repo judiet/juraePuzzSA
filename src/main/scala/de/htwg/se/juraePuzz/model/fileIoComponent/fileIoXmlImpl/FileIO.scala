@@ -5,8 +5,9 @@ import com.google.inject.name.Names
 import de.htwg.se.juraePuzz.JuraePuzzModule
 import de.htwg.se.juraePuzz.model.GridInterface
 import de.htwg.se.juraePuzz.model.fileIoComponent.FileIOInterface
-import de.htwg.se.juraePuzz.model.gridBaseImpl.{Piece, Direction}
+import de.htwg.se.juraePuzz.model.gridBaseImpl.{Direction, Piece}
 import net.codingwell.scalaguice.InjectorExtensions._
+import play.api.libs.json.{JsString, JsValue}
 
 import scala.xml.PrettyPrinter
 
@@ -70,4 +71,5 @@ class FileIO extends FileIOInterface {
     </cell>
   }
 
+  override def getJasonGrid(grid: GridInterface): JsValue = JsString("play")
 }

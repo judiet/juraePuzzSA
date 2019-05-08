@@ -3,6 +3,7 @@ package de.htwg.se.juraePuzz.controller.ControllerMockImpl
 import de.htwg.se.juraePuzz.controller.{ControllerInterface, GameStatus}
 import de.htwg.se.juraePuzz.model.GridInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl._
+import play.api.libs.json.{JsString, JsValue}
 
 class Controller(var grid: Grid) extends ControllerInterface{
   override def createEmptyGrid(): Unit = {}
@@ -35,5 +36,5 @@ class Controller(var grid: Grid) extends ControllerInterface{
 
   override def cell(row: Int, col: Int): Piece = Piece(0)
 
-  override def solveActor(value: GridInterface): Unit = this
+  override def getJsonGrid: JsValue = JsString("play")
 }
