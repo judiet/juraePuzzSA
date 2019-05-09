@@ -4,7 +4,6 @@ version       := "0.14.0"
 scalaVersion  := "2.12.7"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
-
 libraryDependencies += "junit" % "junit" % "4.8" % "test"
 
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5"
