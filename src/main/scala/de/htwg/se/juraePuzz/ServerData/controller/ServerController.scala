@@ -18,24 +18,24 @@ class ServerController {
 
 
   def server(): Unit = {
-    val serverSource = Http().bind(interface = "localhost", port = 8080)
+    val serverSource = Http().bind(interface = "localhost", port = 8888)
 
     val requestHandler: HttpRequest => HttpResponse = {
 
       case HttpRequest(GET, Uri.Path("/grid"),_,_,_) =>
-        HttpResponse(entity = "blub")
+        HttpResponse(entity = "grid")
 
       case HttpRequest(GET, Uri.Path("/left"),_,_,_) =>
-        HttpResponse(entity = "blub")
+        HttpResponse(entity = "left")
 
       case HttpRequest(GET, Uri.Path("/right"),_,_,_) =>
-        HttpResponse(entity = "blub")
+        HttpResponse(entity = "right")
 
       case HttpRequest(GET, Uri.Path("/up"),_,_,_) =>
-        HttpResponse(entity = "blub")
+        HttpResponse(entity = "up")
 
       case HttpRequest(GET, Uri.Path("/down"),_,_,_) =>
-        HttpResponse(entity = "blub")
+        HttpResponse(entity = "down")
 
       case r: HttpRequest =>
         r.discardEntityBytes() // important to drain incoming HTTP Entity stream
@@ -50,6 +50,10 @@ class ServerController {
         // this is equivalent to
         // connection handleWith { Flow[HttpRequest] map requestHandler }
       }).run()
+
+  }
+
+  def handleDatabase(): Unit ={
 
   }
 
