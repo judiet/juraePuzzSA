@@ -15,6 +15,7 @@ object juraePuzz {
   val grid = new Grid(3)
   val controller = new Controller(grid)
 
+
   val tui = new Tui(controller)
   val gui = new SwingGui(controller)
   val rest = new RestApi(controller)
