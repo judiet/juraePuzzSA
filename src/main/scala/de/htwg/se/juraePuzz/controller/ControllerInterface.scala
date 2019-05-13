@@ -26,9 +26,13 @@ trait ControllerInterface extends Publisher {
 
   def solve(): Unit
 
+  def saveToDB: Unit
+
   def save: Unit
 
   def load: Unit
+
+  def loadFromDB:Unit
 
   def gridToString: String
 

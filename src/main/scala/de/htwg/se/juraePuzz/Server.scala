@@ -7,8 +7,6 @@ object Server {
     val controller = new ServerController()
 
     controller.server()
-
-
   }
 
 }

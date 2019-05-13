@@ -14,6 +14,7 @@ import scala.util.{Failure, Success}
 import scala.xml.Document
 
 
+
 class ServerController {
 
   implicit val system = ActorSystem()
@@ -24,6 +25,52 @@ class ServerController {
   val collection: MongoCollection[Document] = database.getCollection("JuraeColl")
 
 
+
+  val json: String =
+    """
+{
+  "grid": {
+    "size" : 3,
+    "cell" : [{
+  	  "row" : 0,
+  	  "col" : 0,
+  	  "value" : 1
+    },{
+   	  "row" : 0,
+   	  "col" : 1,
+   	  "value" : 2
+     },{
+    	  "row" : 0,
+    	  "col" : 2,
+    	  "value" : 3
+      },{
+    	  "row" : 1,
+    	  "col" : 0,
+    	  "value" : 4
+      },{
+    	  "row" : 1,
+    	  "col" : 1,
+    	  "value" : 5
+      },{
+    	  "row" : 1,
+    	  "col" : 2,
+    	  "value" : 6
+      },{
+    	  "row" : 2,
+    	  "col" : 0,
+    	  "value" : 7
+      },{
+    	  "row" : 2,
+    	  "col" : 1,
+    	  "value" : 8
+      },{
+    	  "row" : 2,
+    	  "col" : 2,
+    	  "value" : 0
+      }]
+  }
+}
+"""
 
 
   def server(): Unit = {
@@ -41,13 +88,22 @@ class ServerController {
 
 
 
-    val requestHandler: HttpRequest => HttpResponse = {
+
 
       case HttpRequest(GET, Uri.Path("/grid"), _, _, _) =>
         HttpResponse(entity = "grid")
 
       case HttpRequest(GET, Uri.Path("/left"), _, _, _) =>
         HttpResponse(entity = "left")
+
+    val requestHandler: HttpRequest => HttpResponse = {
+
+      case HttpRequest(GET, Uri.Path("/load"), _, _, _) => {
+        HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, json))
+      }
+      case HttpRequest(GET, Uri.Path("/save"), _, _, _) =>
+        HttpResponse(entity = "saved")
+
 
       case HttpRequest(GET, Uri.Path("/right"), _, _, _) =>
         HttpResponse(entity = "right")
@@ -65,7 +121,7 @@ class ServerController {
 
     val bindingFuture: Future[Http.ServerBinding] =
       serverSource.to(Sink.foreach { connection =>
-        println("Accepted new connection from " + connection.remoteAddress)
+        //print("Accepted new connection from " + connection.remoteAddress)
 
         connection handleWithSyncHandler requestHandler
         // this is equivalent to
@@ -75,7 +131,9 @@ class ServerController {
   }
 
 
+
   def handleDatabase(): Unit = {
+
 
 
   }

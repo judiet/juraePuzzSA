@@ -37,4 +37,8 @@ class Controller(var grid: Grid) extends ControllerInterface{
   override def cell(row: Int, col: Int): Piece = Piece(0)
 
   override def getJsonGrid: JsValue = JsString("play")
+
+  override def saveToDB: Unit = {}
+
+  override def loadFromDB: Unit = {}
 }

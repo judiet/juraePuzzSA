@@ -52,7 +52,7 @@ class RestApi(controller: ControllerInterface) {
           }
         }
 
-      val bindingFuture = Http().bindAndHandle(route, "localhost", 8888)
+      val bindingFuture = Http().bindAndHandle(route, "localhost", 9090)
 
       println(s"Server online at http://localhost:8888/o\nPress RETURN to stop...")
       StdIn.readLine()

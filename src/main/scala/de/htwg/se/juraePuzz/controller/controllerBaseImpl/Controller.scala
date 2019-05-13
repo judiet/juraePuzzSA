@@ -1,11 +1,15 @@
 package de.htwg.se.juraePuzz.controller.controllerBaseImpl
 
+import akka.actor.ActorSystem
+import akka.http.scaladsl.unmarshalling.Unmarshal
+import akka.stream.ActorMaterializer
 import com.google.inject.{Guice, Inject}
 import de.htwg.se.juraePuzz.JuraePuzzModule
 import de.htwg.se.juraePuzz.aview.Gui.CellChanged
 import de.htwg.se.juraePuzz.controller.GameStatus._
 import de.htwg.se.juraePuzz.controller._
 import de.htwg.se.juraePuzz.model.GridInterface
+import de.htwg.se.juraePuzz.model.databaseComponent.DatabaseInterface
 import de.htwg.se.juraePuzz.model.fileIoComponent.FileIOInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl._
 import de.htwg.se.juraePuzz.util._
@@ -15,14 +19,23 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.swing.Publisher
 import scala.util.{Failure, Success}
-
+import play.api.libs.json.{JsValue, Json}
+import spray.json._
 
 class Controller @Inject()(var grid: GridInterface) extends ControllerInterface with Publisher {
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
+  // needed for the future flatMap/onComplete in the end
+  implicit val executionContext = system.dispatcher
 
   var gameStatus: GameStatus = IDLE
   val undoManager = new UndoManager
   val injector = Guice.createInjector(new JuraePuzzModule)
   val fileIo = injector.instance[FileIOInterface]
+
+
+  val database = injector.instance[DatabaseInterface]
+
 
   //def isSet(row: Int, col: Int): Boolean = grid.cell(row, col).isSet
 
@@ -98,13 +111,51 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
   }
 
   def save: Unit = {
+    val json = fileIo.getJasonGrid(grid)
     fileIo.save(grid)
     gameStatus = SAVED
     toggleShow()
   }
 
+  def saveToDB: Unit = {
+    val json = fileIo.getJasonGrid(grid)
+    database.saveGrid(json)
+    gameStatus = SAVED
+    toggleShow()
+  }
+
+  override def loadFromDB: Unit ={
+    val gridFromDB = database.loadGrid()
+    gridFromDB
+      .onComplete {
+        case Success(res) => {
+          val responseAsString: Future[String] = Unmarshal(res.entity).to[String]
+          val parsed = responseAsString.onComplete {
+            case Success(res) => {
+              val json: JsValue = Json.parse(res)
+              val x = database.loadFromJson(json)
+              x match {
+                case None => {
+                  createEmptyGrid()
+                  gameStatus = COULDNOTLOAD
+                }
+                case Some(_grid) => {
+                  grid = _grid
+                  gameStatus = LOADED
+                }
+              }
+              toggleShow()
+            }
+            case Failure(_) => sys.error("wrong")
+          }
+        }
+        case Failure(_) => sys.error("something wrong")
+      }
+  }
+
   override def load: Unit = {
     val gridOption = fileIo.load
+
     gridOption match {
       case None => {
         createEmptyGrid()
@@ -116,6 +167,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
       }
     }
     toggleShow()
+
   }
 
   override def gridToString: String = grid.toString()
