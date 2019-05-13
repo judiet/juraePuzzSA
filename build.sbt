@@ -26,7 +26,7 @@ libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.0.0"
 
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 
-libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.3.0"
+libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0"
 
 libraryDependencies += "com.typesafe.slick" %% "slick" % "3.2.3"
 
@@ -37,6 +37,10 @@ libraryDependencies += "com.typesafe.akka" %% "akka-http"   % "10.1.8"
 libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.22"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.8"
+
+
+
+
 
 /*
 

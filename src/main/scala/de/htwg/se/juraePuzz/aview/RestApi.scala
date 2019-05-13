@@ -7,8 +7,7 @@ import akka.stream.ActorMaterializer
 import akka.http.scaladsl.server.Directives._
 import de.htwg.se.juraePuzz.controller.ControllerInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl.Direction
-import play.api.libs.json.JsValue
-import spray.json.JsString
+
 
 import scala.io.StdIn
 
