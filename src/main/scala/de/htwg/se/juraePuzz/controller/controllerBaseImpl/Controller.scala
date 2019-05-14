@@ -1,7 +1,6 @@
 package de.htwg.se.juraePuzz.controller.controllerBaseImpl
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import com.google.inject.{Guice, Inject}
 import de.htwg.se.juraePuzz.JuraePuzzModule
@@ -14,13 +13,13 @@ import de.htwg.se.juraePuzz.model.fileIoComponent.FileIOInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl._
 import de.htwg.se.juraePuzz.util._
 import net.codingwell.scalaguice.InjectorExtensions._
+import play.api.libs.json.Json
+import spray.json.JsValue
+import spray.json._
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.swing.Publisher
 import scala.util.{Failure, Success}
-import play.api.libs.json.{JsValue, Json}
-import spray.json._
 
 class Controller @Inject()(var grid: GridInterface) extends ControllerInterface with Publisher {
   implicit val system = ActorSystem()
@@ -112,6 +111,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
 
   def save: Unit = {
     val json = fileIo.getJasonGrid(grid)
+
     fileIo.save(grid)
     gameStatus = SAVED
     toggleShow()
@@ -124,8 +124,25 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     toggleShow()
   }
 
-  override def loadFromDB: Unit ={
-    val gridFromDB = database.loadGrid()
+  override def loadFromDB: Unit = {
+    val gridFromDB: String = database.loadGrid()
+
+    val json = Json.parse(gridFromDB)
+    val x = database.loadFromJson(json)
+    x match {
+      case None => {
+        createEmptyGrid()
+        gameStatus = COULDNOTLOAD
+        println("fail")
+      }
+      case Some (_grid) => {
+        grid = _grid
+        gameStatus = LOADED
+        println("it worked")
+      }
+    }
+
+    /*val gridFromDB = database.loadGrid()
     gridFromDB
       .onComplete {
         case Success(res) => {
@@ -140,6 +157,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
                   gameStatus = COULDNOTLOAD
                 }
                 case Some(_grid) => {
+                  println("test")
                   grid = _grid
                   gameStatus = LOADED
                 }
@@ -150,7 +168,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
           }
         }
         case Failure(_) => sys.error("something wrong")
-      }
+      }*/
   }
 
   override def load: Unit = {

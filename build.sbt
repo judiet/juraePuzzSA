@@ -22,8 +22,6 @@ libraryDependencies += "com.typesafe.play" %% "play-json" % "2.6.6"
 
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 
-libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.0.0"
-
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 
 libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0"
@@ -38,6 +36,11 @@ libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.22"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.8"
 
+libraryDependencies += "com.github.etaty" %% "rediscala" % "1.8.0"
+
+libraryDependencies ++= Seq(
+  "net.debasishg" %% "redisreact" % "0.9"
+)
 
 
 

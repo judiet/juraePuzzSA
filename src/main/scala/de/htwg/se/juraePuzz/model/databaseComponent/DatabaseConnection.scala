@@ -1,16 +1,18 @@
 package de.htwg.se.juraePuzz.model.databaseComponent
 
-import com.google.inject.Guice
-import com.google.inject.name.Names
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
+import com.google.inject.Guice
+import com.google.inject.name.Names
 import de.htwg.se.juraePuzz.JuraePuzzModule
 import de.htwg.se.juraePuzz.model.GridInterface
-import play.api.libs.json.JsValue
 import net.codingwell.scalaguice.InjectorExtensions._
+import play.api.libs.json.JsValue
+
 import scala.concurrent.Future
+import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
 class DatabaseConnection extends DatabaseInterface {
@@ -34,12 +36,31 @@ class DatabaseConnection extends DatabaseInterface {
       }
   }
 
-  override def loadGrid(): Future[HttpResponse] = {
+  override def loadGrid(): String = {
+    var response: String = ""
+    var done: Boolean = false
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
       method = HttpMethods.GET,
       uri = "http://localhost:8888/load"))
 
-    responseFuture
+    responseFuture.onComplete {
+      case Success(value) => {
+        val tmp: Future[String] = value.entity.toStrict(5 seconds).map(_.data.decodeString("UTF-8"))
+        tmp.onComplete {
+          case Success(x) => {
+            response = x
+            done = true
+
+          }
+          case Failure(_) => {
+            response = ""
+            done = true
+          }
+        }
+      }
+    }
+    while (!done) {}
+    response
   }
 
   def loadFromJson(jsValue: JsValue): Option[GridInterface] = {
