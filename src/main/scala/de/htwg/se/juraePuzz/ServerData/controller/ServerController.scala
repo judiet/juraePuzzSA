@@ -1,38 +1,23 @@
 package de.htwg.se.juraePuzz.ServerData.controller
 
-import java.util.concurrent.TimeUnit
-
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpMethods._
 import akka.http.scaladsl.model.{HttpRequest, _}
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
-import com.mongodb.async.client.{Observer, Subscription}
-import org.mongodb.scala.bson.collection.mutable.Document
-import org.mongodb.scala.model.Filters
-import org.mongodb.scala.{Completed, MongoClient, MongoCollection, MongoDatabase, SingleObservable}
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
 import scala.util.{Failure, Success}
 
 
-class ServerController {
+class ServerController(database: Database) {
 
 
   implicit val system = ActorSystem("System")
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
-  val client: MongoClient = MongoClient("mongodb://localhost:27017")
-  val database: MongoDatabase = client.getDatabase("JuraeDB")
-  val collection: MongoCollection[Document] = database.getCollection("JuraeColl")
-  var id: Int = _
-  val r = scala.util.Random
-
-
-
-
   val json: String =
     """
 {
@@ -95,12 +80,26 @@ class ServerController {
 
 
       case HttpRequest(GET, Uri.Path("/load"), _, _, _) => {
-        val tmp = collection.find(Filters.equal("_id", id)).first()
-        val response: Document = Await.result(tmp.toFuture(), Duration(5, TimeUnit.SECONDS))
-        println(response)
-        //val response = collection.find().subscribe((doc: Document) => println(doc.toJson()))
-        HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, response.toJson()))
+        var finalresponse = ""
+        var done: Boolean = false
+        val response = database.client.get("data")
+        response.onComplete {
+          case Success(x) => {
+
+            println("return stuff " + x.get.decodeString("UTF-8"))
+            finalresponse = x.get.decodeString("UTF-8")
+            done = true
+          }
+          case Failure(_) => {
+            println("nö")
+            finalresponse = "error"
+            done = true
+          }
+        }
+        while (!done) {}
+        HttpResponse(entity = finalresponse)
       }
+
       case HttpRequest(GET, Uri.Path("/save"), _, _, _) => {
         val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
           method = HttpMethods.GET,
@@ -108,32 +107,27 @@ class ServerController {
           //entity = HttpEntity(ContentTypes.`application/json`, json.toString)
         ))
         responseFuture.onComplete {
-          case Success(value) =>
-            val test: Future[String] = value.entity.toStrict(5 seconds).map(_.data.decodeString("UTF-8"))
-            test.onComplete {
+          case Success(value) => {
+            val tmp: Future[String] = value.entity.toStrict(5 seconds).map(_.data.decodeString("UTF-8"))
+            tmp.onComplete {
               case Success(x) => {
-                id = r.nextInt(999999999)
-
-                val doc: Document = Document("_id" -> id, "info" -> Document(x))
-                println(doc)
-
-                val insertObservable: SingleObservable[Completed] = collection.insertOne(doc)
-
-                insertObservable.subscribe(new Observer[Completed] {
-                  override def onNext(result: Completed): Unit = println(s"onNext: $result")
-
-                  override def onError(e: Throwable): Unit = println(s"onError: $e")
-
-                  override def onComplete(): Unit = println("onComplete")
-
-                  override def onSubscribe(subscription: Subscription): Unit = println("was soll das teil hier? Steht nicht in der doku")
-                })
+               // println("save:  "+ x)
+                database.client.set("data", x.toString)
+                val test = database.client.get("data")
+                test.onComplete{
+                  case Success(x) => println("saved stuff " + x.get.decodeString("UTF-8"))
+                  case Failure(_) => println("sad")
+                }
               }
-              case Failure(_) => sys.error("Document creation failed")
+
+              case Failure(_) => sys.error("sndfkj,hynm")
             }
 
-          case Failure(_) => sys.error("Request failed")
+
+          }
+          case Failure(_) => sys.error("fail")
         }
+
         HttpResponse(entity = "saved")
 
       }
