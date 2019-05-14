@@ -85,13 +85,10 @@ class ServerController(database: Database) {
         val response = database.client.get("data")
         response.onComplete {
           case Success(x) => {
-
-            println("return stuff " + x.get.decodeString("UTF-8"))
             finalresponse = x.get.decodeString("UTF-8")
             done = true
           }
           case Failure(_) => {
-            println("nö")
             finalresponse = "error"
             done = true
           }
@@ -104,20 +101,13 @@ class ServerController(database: Database) {
         val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
           method = HttpMethods.GET,
           uri = "http://localhost:9090/grid",
-          //entity = HttpEntity(ContentTypes.`application/json`, json.toString)
         ))
         responseFuture.onComplete {
           case Success(value) => {
             val tmp: Future[String] = value.entity.toStrict(5 seconds).map(_.data.decodeString("UTF-8"))
             tmp.onComplete {
               case Success(x) => {
-               // println("save:  "+ x)
                 database.client.set("data", x.toString)
-                val test = database.client.get("data")
-                test.onComplete{
-                  case Success(x) => println("saved stuff " + x.get.decodeString("UTF-8"))
-                  case Failure(_) => println("sad")
-                }
               }
 
               case Failure(_) => sys.error("sndfkj,hynm")
