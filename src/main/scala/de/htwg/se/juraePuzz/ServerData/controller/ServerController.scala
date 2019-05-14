@@ -9,7 +9,6 @@ import akka.http.scaladsl.model.{HttpRequest, _}
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
 import com.mongodb.async.client.{Observer, Subscription}
-import org.mongodb.scala.bson.ObjectId
 import org.mongodb.scala.bson.collection.mutable.Document
 import org.mongodb.scala.model.Filters
 import org.mongodb.scala.{Completed, MongoClient, MongoCollection, MongoDatabase, SingleObservable}
@@ -28,8 +27,9 @@ class ServerController {
   val client: MongoClient = MongoClient("mongodb://localhost:27017")
   val database: MongoDatabase = client.getDatabase("JuraeDB")
   val collection: MongoCollection[Document] = database.getCollection("JuraeColl")
+  var id: Int = _
+  val r = scala.util.Random
 
-  var id: Int = 1
 
 
 
@@ -95,11 +95,11 @@ class ServerController {
 
 
       case HttpRequest(GET, Uri.Path("/load"), _, _, _) => {
-        val tmp = collection.find(Filters.equal("_id", id-1)).first()
-        val response = Await.result(tmp.toFuture(), Duration(5, TimeUnit.SECONDS))
+        val tmp = collection.find(Filters.equal("_id", id)).first()
+        val response: Document = Await.result(tmp.toFuture(), Duration(5, TimeUnit.SECONDS))
         println(response)
         //val response = collection.find().subscribe((doc: Document) => println(doc.toJson()))
-        HttpResponse(entity = response.toString)
+        HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, response.toJson()))
       }
       case HttpRequest(GET, Uri.Path("/save"), _, _, _) => {
         val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
@@ -112,10 +112,11 @@ class ServerController {
             val test: Future[String] = value.entity.toStrict(5 seconds).map(_.data.decodeString("UTF-8"))
             test.onComplete {
               case Success(x) => {
+                id = r.nextInt(999999999)
 
                 val doc: Document = Document("_id" -> id, "info" -> Document(x))
                 println(doc)
-                id = id + 1
+
                 val insertObservable: SingleObservable[Completed] = collection.insertOne(doc)
 
                 insertObservable.subscribe(new Observer[Completed] {
