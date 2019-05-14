@@ -1,5 +1,7 @@
 package de.htwg.se.juraePuzz.ServerData.controller
 
+import java.util.concurrent.TimeUnit
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpMethods._
@@ -7,11 +9,13 @@ import akka.http.scaladsl.model.{HttpRequest, _}
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
 import com.mongodb.async.client.{Observer, Subscription}
+import org.mongodb.scala.bson.ObjectId
 import org.mongodb.scala.bson.collection.mutable.Document
+import org.mongodb.scala.model.Filters
 import org.mongodb.scala.{Completed, MongoClient, MongoCollection, MongoDatabase, SingleObservable}
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 import scala.util.{Failure, Success}
 
 
@@ -24,6 +28,9 @@ class ServerController {
   val client: MongoClient = MongoClient("mongodb://localhost:27017")
   val database: MongoDatabase = client.getDatabase("JuraeDB")
   val collection: MongoCollection[Document] = database.getCollection("JuraeColl")
+
+  var id: Int = 1
+
 
 
   val json: String =
@@ -88,22 +95,27 @@ class ServerController {
 
 
       case HttpRequest(GET, Uri.Path("/load"), _, _, _) => {
-        val response = collection.find().subscribe((doc: Document) => println(doc.toJson()))
+        val tmp = collection.find(Filters.equal("_id", id-1)).first()
+        val response = Await.result(tmp.toFuture(), Duration(5, TimeUnit.SECONDS))
+        println(response)
+        //val response = collection.find().subscribe((doc: Document) => println(doc.toJson()))
         HttpResponse(entity = response.toString)
       }
       case HttpRequest(GET, Uri.Path("/save"), _, _, _) => {
         val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
           method = HttpMethods.GET,
           uri = "http://localhost:9090/grid",
-          entity = HttpEntity(ContentTypes.`application/json`, json.toString)
-
+          //entity = HttpEntity(ContentTypes.`application/json`, json.toString)
         ))
         responseFuture.onComplete {
           case Success(value) =>
             val test: Future[String] = value.entity.toStrict(5 seconds).map(_.data.decodeString("UTF-8"))
             test.onComplete {
               case Success(x) => {
-                val doc: Document = Document(x)
+
+                val doc: Document = Document("_id" -> id, "info" -> Document(x))
+                println(doc)
+                id = id + 1
                 val insertObservable: SingleObservable[Completed] = collection.insertOne(doc)
 
                 insertObservable.subscribe(new Observer[Completed] {
@@ -113,7 +125,7 @@ class ServerController {
 
                   override def onComplete(): Unit = println("onComplete")
 
-                  override def onSubscribe(subscription: Subscription): Unit = print("was soll das teil hier? Steht nicht in der doku")
+                  override def onSubscribe(subscription: Subscription): Unit = println("was soll das teil hier? Steht nicht in der doku")
                 })
               }
               case Failure(_) => sys.error("Document creation failed")
@@ -121,7 +133,6 @@ class ServerController {
 
           case Failure(_) => sys.error("Request failed")
         }
-        print(responseFuture)
         HttpResponse(entity = "saved")
 
       }
