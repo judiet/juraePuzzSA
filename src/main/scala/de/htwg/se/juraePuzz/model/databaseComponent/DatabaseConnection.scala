@@ -83,7 +83,7 @@ class DatabaseConnection extends DatabaseInterface {
           val row = (jsValue \\ "row") (index).as[Int]
           val col = (jsValue \\ "col") (index).as[Int]
           val value = (jsValue \\ "value") (index).as[Int]
-          tmp = grid.set(row, col, value)
+          tmp = tmp.set(row, col, value)
           //println(tmp)
 
         }

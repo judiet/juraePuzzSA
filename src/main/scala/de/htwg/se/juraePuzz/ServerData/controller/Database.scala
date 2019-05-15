@@ -12,8 +12,6 @@ class Database {
   implicit val executionContext = system.dispatcher
   implicit val timeout = Timeout(5 seconds)
 
-
-
   val client = RedisClient("localhost", 6379)
 
 
