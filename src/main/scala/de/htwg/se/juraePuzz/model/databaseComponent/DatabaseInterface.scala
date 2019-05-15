@@ -8,6 +8,6 @@ import scala.concurrent.Future
 
 trait DatabaseInterface {
   def saveGrid(json: JsValue):Unit
-  def loadGrid(): String
+  def loadGrid(): Future[HttpResponse]
   def loadFromJson(jsValue: JsValue): Option[GridInterface]
 }

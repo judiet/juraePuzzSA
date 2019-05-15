@@ -8,6 +8,7 @@ import com.google.inject.Guice
 import com.google.inject.name.Names
 import de.htwg.se.juraePuzz.JuraePuzzModule
 import de.htwg.se.juraePuzz.model.GridInterface
+import de.htwg.se.juraePuzz.model.gridBaseImpl.Grid
 import net.codingwell.scalaguice.InjectorExtensions._
 import play.api.libs.json.JsValue
 
@@ -36,14 +37,14 @@ class DatabaseConnection extends DatabaseInterface {
       }
   }
 
-  override def loadGrid(): String = {
+  override def loadGrid(): Future[HttpResponse] = {
     var response: String = ""
     var done: Boolean = false
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
       method = HttpMethods.GET,
       uri = "http://localhost:8888/load"))
 
-    responseFuture.onComplete {
+   /* responseFuture.onComplete {
       case Success(value) => {
         val tmp: Future[String] = value.entity.toStrict(1 seconds).map(_.data.decodeString("UTF-8"))
         tmp.onComplete {
@@ -62,13 +63,14 @@ class DatabaseConnection extends DatabaseInterface {
     }
     while (!done) {
       println(response)
-    }
-    response
+    }*/
+    responseFuture
   }
 
   def loadFromJson(jsValue: JsValue): Option[GridInterface] = {
     var gridOption: Option[GridInterface] = None
     val size = (jsValue \ "grid" \ "size").get.toString.toInt
+    var tmp: GridInterface = new Grid(size)
     val injector = Guice.createInjector(new JuraePuzzModule)
     size match {
       case 3 => gridOption = Some(injector.instance[GridInterface](Names.named("mittel")))
@@ -76,16 +78,18 @@ class DatabaseConnection extends DatabaseInterface {
     }
     gridOption match {
       case Some(grid) => {
-        val _grid = grid
+        //val _grid = grid
         for (index <- 0 until size * size) {
           val row = (jsValue \\ "row") (index).as[Int]
           val col = (jsValue \\ "col") (index).as[Int]
           val value = (jsValue \\ "value") (index).as[Int]
-          _grid.set(row, col, value)
+          tmp = grid.set(row, col, value)
+          //println(tmp)
+
         }
-        gridOption = Some(_grid)
+        gridOption = Some(tmp)
       }
-      case None =>
+      case None =>{}
     }
     gridOption
   }

@@ -1,6 +1,8 @@
 package de.htwg.se.juraePuzz.controller.controllerBaseImpl
 
 import akka.actor.ActorSystem
+import akka.http.scaladsl.model.HttpResponse
+import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import com.google.inject.{Guice, Inject}
 import de.htwg.se.juraePuzz.JuraePuzzModule
@@ -13,11 +15,10 @@ import de.htwg.se.juraePuzz.model.fileIoComponent.FileIOInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl._
 import de.htwg.se.juraePuzz.util._
 import net.codingwell.scalaguice.InjectorExtensions._
-import play.api.libs.json.Json
-import spray.json.JsValue
-import spray.json._
+import play.api.libs.json.{JsValue, Json}
 
 import scala.concurrent.Future
+import scala.concurrent.duration._
 import scala.swing.Publisher
 import scala.util.{Failure, Success}
 
@@ -124,9 +125,69 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     toggleShow()
   }
 
-  override def loadFromDB: Unit = {
-    val gridFromDB: String = database.loadGrid()
+  override def loadFromDB: Unit ={
+    val gridFromDB = database.loadGrid()
+    gridFromDB
+      .onComplete {
+        case Success(res) => {
+          val responseAsString: Future[String] = Unmarshal(res.entity).to[String]
+          val parsed = responseAsString.onComplete {
+            case Success(res) => {
+              val json: JsValue = Json.parse(res)
+              val x = database.loadFromJson(json)
+              x match {
+                case None => {
+                  createEmptyGrid()
+                  println("fail")
+                  gameStatus = COULDNOTLOAD
+                }
+                case Some(_grid) => {
+                  grid = _grid
+                  println(grid)
+                  gameStatus = LOADED
+                }
+              }
+              toggleShow()
+            }
+            case Failure(_) => sys.error("wrong")
+          }
+        }
+        case Failure(_) => sys.error("something wrong")
+      }
+  }
 
+
+    /*
+    val gridFromDB: Future[HttpResponse] = database.loadGrid()
+    gridFromDB.onComplete {
+      case Success(value) => {
+        val tmp: Future[String] = value.entity.toStrict(1 seconds).map(_.data.decodeString("UTF-8"))
+        tmp.onComplete {
+          case Success(x) => {
+            val json = Json.parse(x)
+            val tmp = database.loadFromJson(json)
+            tmp match {
+              case None => {
+                createEmptyGrid()
+                gameStatus = COULDNOTLOAD
+                println("fail")
+                toggleShow()
+              }
+              case Some(_grid) => {
+                grid = _grid
+                gameStatus = LOADED
+                println(grid)
+                toggleShow()
+              }
+            }
+
+
+          }
+        }
+      }
+      case Failure(_) => sys.error("failed getting response")
+    }
+/*
     val json = Json.parse(gridFromDB)
     val x = database.loadFromJson(json)
     x match {
@@ -135,12 +196,12 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
         gameStatus = COULDNOTLOAD
         println("fail")
       }
-      case Some (_grid) => {
+      case Some(_grid) => {
         grid = _grid
         gameStatus = LOADED
         println("it worked")
       }
-    }
+    }*/
 
     /*val gridFromDB = database.loadGrid()
     gridFromDB
@@ -170,7 +231,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
         case Failure(_) => sys.error("something wrong")
       }*/
     toggleShow()
-  }
+  }*/
 
   override def load: Unit = {
     val gridOption = fileIo.load
@@ -186,8 +247,9 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
       }
     }
     toggleShow()
-
   }
+
+
 
   override def gridToString: String = grid.toString()
 
@@ -211,4 +273,6 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
   }
 
   def getJsonGrid() = fileIo.getJasonGrid(grid)
+
+
 }
