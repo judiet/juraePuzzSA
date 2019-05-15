@@ -169,6 +169,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
         }
         case Failure(_) => sys.error("something wrong")
       }*/
+    toggleShow()
   }
 
   override def load: Unit = {

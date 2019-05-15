@@ -45,21 +45,24 @@ class DatabaseConnection extends DatabaseInterface {
 
     responseFuture.onComplete {
       case Success(value) => {
-        val tmp: Future[String] = value.entity.toStrict(5 seconds).map(_.data.decodeString("UTF-8"))
+        val tmp: Future[String] = value.entity.toStrict(1 seconds).map(_.data.decodeString("UTF-8"))
         tmp.onComplete {
           case Success(x) => {
+            println(x)
             response = x
             done = true
 
           }
           case Failure(_) => {
-            response = ""
+            response = "fail"
             done = true
           }
         }
       }
     }
-    while (!done) {}
+    while (!done) {
+      println(response)
+    }
     response
   }
 

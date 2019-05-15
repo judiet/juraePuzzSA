@@ -110,7 +110,7 @@ class ServerController(database: Database) {
                 database.client.set("data", x.toString)
               }
 
-              case Failure(_) => sys.error("sndfkj,hynm")
+              case Failure(_) => sys.error("error")
             }
 
 
