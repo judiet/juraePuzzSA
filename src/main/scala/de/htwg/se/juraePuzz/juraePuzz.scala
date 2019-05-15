@@ -5,7 +5,7 @@ import com.google.inject.Guice
 import de.htwg.se.juraePuzz.aview.{RestApi, Tui}
 import de.htwg.se.juraePuzz.aview.Gui.SwingGui
 import de.htwg.se.juraePuzz.controller.ControllerInterface
-import de.htwg.se.juraePuzz.controller.controllerBaseImpl.{Controller, myActor}
+import de.htwg.se.juraePuzz.controller.controllerBaseImpl.Controller
 import de.htwg.se.juraePuzz.model.gridBaseImpl.{Grid, Solver}
 
 object juraePuzz {
@@ -14,6 +14,7 @@ object juraePuzz {
   //val controller = injector.getInstance(classOf[ControllerInterface])
   val grid = new Grid(3)
   val controller = new Controller(grid)
+
 
   val tui = new Tui(controller)
   val gui = new SwingGui(controller)

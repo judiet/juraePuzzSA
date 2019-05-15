@@ -7,8 +7,7 @@ import akka.stream.ActorMaterializer
 import akka.http.scaladsl.server.Directives._
 import de.htwg.se.juraePuzz.controller.ControllerInterface
 import de.htwg.se.juraePuzz.model.gridBaseImpl.Direction
-import play.api.libs.json.JsValue
-import spray.json.JsString
+
 
 import scala.io.StdIn
 
@@ -53,7 +52,7 @@ class RestApi(controller: ControllerInterface) {
           }
         }
 
-      val bindingFuture = Http().bindAndHandle(route, "localhost", 8888)
+      val bindingFuture = Http().bindAndHandle(route, "localhost", 9090)
 
       println(s"Server online at http://localhost:8888/o\nPress RETURN to stop...")
       StdIn.readLine()

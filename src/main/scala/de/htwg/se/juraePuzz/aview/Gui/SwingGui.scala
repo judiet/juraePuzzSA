@@ -60,14 +60,14 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     contents += new Button("Save") {
       listenTo(mouse.clicks)
       reactions += {
-        case e: MouseClicked => controller.save
+        case e: MouseClicked => controller.saveToDB
       }
     }
 
     contents += new Button("Load") {
       listenTo(mouse.clicks)
       reactions += {
-        case e: MouseClicked => controller.load
+        case e: MouseClicked => controller.loadFromDB
       }
     }
     contents += new Button("Solve") {
