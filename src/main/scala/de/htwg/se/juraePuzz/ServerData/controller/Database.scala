@@ -5,6 +5,7 @@ import akka.util.Timeout
 import redis.RedisClient
 
 import scala.concurrent.duration._
+import scala.util.Properties
 
 
 class Database {
@@ -12,7 +13,10 @@ class Database {
   implicit val executionContext = system.dispatcher
   implicit val timeout = Timeout(5 seconds)
 
-  val client = RedisClient("localhost", 6379)
+  val HOST = Properties.envOrElse("REDIS_HOST", "localhost")
+  val PORT = Properties.envOrElse("REDIS_PORT", "6379")
+
+  val client = RedisClient(HOST, PORT.toInt)
 
 
 }

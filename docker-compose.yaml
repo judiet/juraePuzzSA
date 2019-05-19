@@ -1,0 +1,33 @@
+version: '3'
+services:
+
+
+  server:
+    build: .
+    image: dockerserver/juraepuzzsa:latest
+    container_name: server
+    restart: unless-stopped
+    tty: true
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "8888:8888"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:4.0.14-alpine
+    container_name: redis
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+
+
+networks:
+  app-network:
+    driver: bridge

@@ -68,7 +68,7 @@ class ServerController(database: Database) {
   def server(): Unit = {
 
 
-    val serverSource = Http().bind(interface = "localhost", port = 8888)
+    val serverSource = Http().bind("docker0", port = 8888)
     val requestHandler: HttpRequest => HttpResponse = {
 
 
@@ -100,7 +100,7 @@ class ServerController(database: Database) {
       case HttpRequest(GET, Uri.Path("/save"), _, _, _) => {
         val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
           method = HttpMethods.GET,
-          uri = "http://localhost:9090/grid",
+          uri = "http://host.docker.internal:9090/grid",
         ))
         responseFuture.onComplete {
           case Success(value) => {
@@ -143,6 +143,10 @@ class ServerController(database: Database) {
         // this is equivalent to
         // connection handleWith { Flow[HttpRequest] map requestHandler }
       }).run()
+
+    bindingFuture.failed.foreach{ex =>
+      sys.error(ex.toString)
+    }
 
   }
 

@@ -16,6 +16,7 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
+
 class DatabaseConnection extends DatabaseInterface {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
@@ -33,7 +34,7 @@ class DatabaseConnection extends DatabaseInterface {
     responseFuture
       .onComplete {
         case Success(res) => println(res)
-        case Failure(_) => sys.error("something wrong")
+        case Failure(e) => sys.error(e.toString)
       }
   }
 
