@@ -68,7 +68,7 @@ class ServerController(database: Database) {
   def server(): Unit = {
 
 
-    val serverSource = Http().bind("docker0", port = 8888)
+    val serverSource = Http().bind("0.0.0.0", port = 8888)
     val requestHandler: HttpRequest => HttpResponse = {
 
 

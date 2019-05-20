@@ -1,10 +1,29 @@
 version: '3'
 services:
 
+  game:
+    build:
+      context: .
+      dockerfile: dockerfilegame
+    image: dockergame/juraepuzzsagame:latest
+    container_name: game
+    restart: unless-stopped
+    tty: true
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SERVER_HOST=docker01
+      - SERVER_PORT=8888
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
 
   server:
-    build: .
-    image: dockerserver/juraepuzzsa:latest
+    build:
+      context: .
+      dockerfile: dockerfile
+    image: dockerserver/juraepuzzsaserver:latest
     container_name: server
     restart: unless-stopped
     tty: true
@@ -25,7 +44,6 @@ services:
       - "6379:6379"
     networks:
       - app-network
-
 
 
 networks:

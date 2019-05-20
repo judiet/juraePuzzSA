@@ -140,14 +140,15 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
                   createEmptyGrid()
                   println("fail")
                   gameStatus = COULDNOTLOAD
+                  toggleShow()
                 }
                 case Some(_grid) => {
                   grid = _grid
                   println(grid)
                   gameStatus = LOADED
+                  toggleShow()
                 }
               }
-              toggleShow()
             }
             case Failure(_) => sys.error("wrong")
           }
