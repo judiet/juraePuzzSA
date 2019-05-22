@@ -2,8 +2,6 @@ FROM zgwmike/akka-sbt
 
 WORKDIR /juraePuzzSA
 
-EXPOSE 9090
-
 ADD . /juraePuzzSA
 
 CMD sbt "runMain de.htwg.se.juraePuzz.juraePuzz"

@@ -12,12 +12,13 @@ services:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - SERVER_HOST=docker01
-      - SERVER_PORT=8888
     ports:
       - "9090:9090"
     networks:
-      - app-network
+      app-network:
+        aliases:
+          - game
+
 
   server:
     build:
@@ -32,8 +33,13 @@ services:
       - REDIS_PORT=6379
     ports:
       - "8888:8888"
+    depends_on:
+      - game
     networks:
-      - app-network
+      app-network:
+        aliases:
+          - server
+
 
   redis:
     image: redis:4.0.14-alpine
@@ -42,10 +48,11 @@ services:
     tty: true
     ports:
       - "6379:6379"
+    depends_on:
+      - server
     networks:
-      - app-network
+      app-network:
 
 
 networks:
   app-network:
-    driver: bridge

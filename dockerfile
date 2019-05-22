@@ -1,6 +1,6 @@
 FROM openjdk:11.0.2
 ENV SBT_VERSION 1.2.8
-
+ENV HOSTNAME serverdb
 RUN \
   curl -L -o sbt-$SBT_VERSION.deb http://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb && \
   dpkg -i sbt-$SBT_VERSION.deb && \
@@ -10,8 +10,6 @@ RUN \
   sbt sbtVersion
 
 WORKDIR /juraePuzzSA
-
-EXPOSE 8888 9090
 
 ADD . /juraePuzzSA
 

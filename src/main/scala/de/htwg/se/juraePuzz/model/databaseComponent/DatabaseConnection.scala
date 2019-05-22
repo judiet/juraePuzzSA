@@ -27,7 +27,7 @@ class DatabaseConnection extends DatabaseInterface {
   def saveGrid(json: JsValue): Unit = {
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
       method = HttpMethods.GET,
-      uri = "http://localhost:8888/save",
+      uri = "http://server:8888/save",
       entity = HttpEntity(ContentTypes.`application/json`, json.toString())
     ))
 
@@ -41,9 +41,10 @@ class DatabaseConnection extends DatabaseInterface {
   override def loadGrid(): Future[HttpResponse] = {
     var response: String = ""
     var done: Boolean = false
+    println("loadGrid")
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
       method = HttpMethods.GET,
-      uri = "http://localhost:8888/load"))
+      uri = "http://server:8888/load"))
 
    /* responseFuture.onComplete {
       case Success(value) => {

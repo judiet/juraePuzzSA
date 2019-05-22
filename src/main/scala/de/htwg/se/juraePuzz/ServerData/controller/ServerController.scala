@@ -100,7 +100,7 @@ class ServerController(database: Database) {
       case HttpRequest(GET, Uri.Path("/save"), _, _, _) => {
         val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(
           method = HttpMethods.GET,
-          uri = "http://host.docker.internal:9090/grid",
+          uri = "http://game:9090/grid",
         ))
         responseFuture.onComplete {
           case Success(value) => {

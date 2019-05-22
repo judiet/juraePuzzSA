@@ -130,6 +130,7 @@ class Controller @Inject()(var grid: GridInterface) extends ControllerInterface 
     gridFromDB
       .onComplete {
         case Success(res) => {
+          println("loadFromDB")
           val responseAsString: Future[String] = Unmarshal(res.entity).to[String]
           val parsed = responseAsString.onComplete {
             case Success(res) => {
