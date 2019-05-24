@@ -1,0 +1,7 @@
+FROM zgwmike/akka-sbt
+
+WORKDIR /game
+
+ADD . /game
+
+CMD sbt "runMain de.htwg.se.juraePuzz.juraePuzz"
