@@ -24,11 +24,9 @@ libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"
 
-libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0"
-
 libraryDependencies += "com.typesafe.slick" %% "slick" % "3.2.3"
 
-libraryDependencies += "com.h2database" % "h2" % "1.4.192"
+//libraryDependencies += "com.h2database" % "h2" % "1.4.192"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-http"   % "10.1.8"
 
@@ -42,8 +40,8 @@ libraryDependencies ++= Seq(
   "net.debasishg" %% "redisreact" % "0.9"
 )
 
-
-
+enablePlugins(JavaAppPackaging)
+enablePlugins(DockerPlugin)
 
 /*
 

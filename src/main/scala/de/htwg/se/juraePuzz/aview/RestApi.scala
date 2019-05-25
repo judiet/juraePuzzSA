@@ -50,11 +50,26 @@ class RestApi(controller: ControllerInterface) {
             controller.solve()
             complete(HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, controller.getJsonGrid.toString)))
           }
+        }~ path("create") {
+          get {
+            controller.createNewGrid
+            complete(HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, controller.getJsonGrid.toString)))
+          }
+        }~ path("save") {
+          get {
+            controller.saveToDB
+            complete(HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, controller.getJsonGrid.toString)))
+          }
+        }~ path("load") {
+          get {
+            controller.loadFromDB
+            complete(HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, controller.getJsonGrid.toString)))
+          }
         }
 
-      val bindingFuture = Http().bindAndHandle(route, "localhost", 9090)
+      val bindingFuture = Http().bindAndHandle(route, "0.0.0.0", 9090)
 
-      println(s"Server online at http://localhost:8888/o\nPress RETURN to stop...")
+      println(s"Server online at http://localhost:9090/o\nPress RETURN to stop...")
       StdIn.readLine()
       bindingFuture
         .flatMap(_.unbind())

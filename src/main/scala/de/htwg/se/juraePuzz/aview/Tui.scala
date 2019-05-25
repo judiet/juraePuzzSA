@@ -21,8 +21,8 @@ class Tui (controller: ControllerInterface) extends Reactor{
       case "y" => controller.redo
       case "c" => controller.createNewGrid
       case "s" => controller.solve()
-      case "f" => controller.save
-      case "l" => controller.load
+      case "f" => controller.saveToDB
+      case "l" => controller.loadFromDB
       case "up" => controller.move(Direction.Up)
       case "down" => controller.move(Direction.Down)
       case "left" => controller.move(Direction.Left)
