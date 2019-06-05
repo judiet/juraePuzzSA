@@ -4,7 +4,7 @@ services:
   game:
     build:
       context: .
-      dockerfile: dockerfilegame
+      dockerfile: game/dockerfilegame
     image: dockergame/juraepuzzsagame:latest
     container_name: game
     restart: unless-stopped
@@ -18,12 +18,10 @@ services:
       app-network:
         aliases:
           - game
-
-
   server:
     build:
       context: .
-      dockerfile: dockerfile
+      dockerfile: databaseMS/dockerfile
     image: dockerserver/juraepuzzsaserver:latest
     container_name: server
     restart: unless-stopped
@@ -40,7 +38,6 @@ services:
         aliases:
           - server
 
-
   redis:
     image: redis:4.0.14-alpine
     container_name: redis
@@ -52,7 +49,6 @@ services:
       - server
     networks:
       app-network:
-
 
 networks:
   app-network:

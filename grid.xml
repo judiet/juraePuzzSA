@@ -1,6 +1,0 @@
-<grid size="2">
-    <cell row="0" col="0"> 0 </cell>
-    <cell row="0" col="1"> 1 </cell>
-    <cell row="1" col="0"> 2 </cell>
-    <cell row="1" col="1"> 3 </cell>
-</grid>
