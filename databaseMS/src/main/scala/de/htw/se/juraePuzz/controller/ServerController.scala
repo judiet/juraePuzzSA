@@ -35,6 +35,7 @@ class ServerController(database: DatabaseInterface) {
 
 
       case HttpRequest(GET, Uri.Path("/load"), _, _, _) => {
+        println("load and send " + database.load(counter))
         HttpResponse(entity = database.load(counter))
       }
 
@@ -43,8 +44,6 @@ class ServerController(database: DatabaseInterface) {
           method = HttpMethods.GET,
           uri = "http://localhost:9090/grid",
         ))
-        println("--------------------"+responseFuture)
-        counter = counter +1
         responseFuture.onComplete {
           case Success(value) => {
             val tmp: Future[String] = value.entity.toStrict(5 seconds).map(_.data.decodeString("UTF-8"))

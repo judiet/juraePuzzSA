@@ -24,7 +24,7 @@ class SlickDB extends DatabaseInterface {
 
       val query = for {
         r <- saves if r.id === 1
-      } yield (r.save)
+      } yield r.save
 
       val futureLoad = db.run(query.result)
 
@@ -41,8 +41,9 @@ class SlickDB extends DatabaseInterface {
 
       println("-------------------------------- save -------------------------------")
       val setup = DBIO.seq(
-        (saves.schema).drop,
-        (saves.schema).create,
+        saves.schema.drop,
+        saves.schema.create,
+
         saves += (1, "master", gridJson),
         // Insert some suppliers
         /*saves += (1, "Acme, Inc.", "test"),

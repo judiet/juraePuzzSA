@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.util.Timeout
 import redis.RedisClient
 
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.util.{Failure, Properties, Success}
 
@@ -26,14 +26,17 @@ class Database extends DatabaseInterface {
     response.onComplete {
       case Success(x) => {
         finalresponse = x.get.decodeString("UTF-8")
-        done = true
+        println("response_______:" + finalresponse)
+
+
       }
       case Failure(_) => {
         finalresponse = "error"
-        done = true
+
+
       }
     }
-    while (!done) {}
+    Thread.sleep(500)
     finalresponse
   }
 
