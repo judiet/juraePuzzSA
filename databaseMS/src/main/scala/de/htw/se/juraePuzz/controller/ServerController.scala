@@ -50,7 +50,7 @@ class ServerController(database: DatabaseInterface) {
             tmp.onComplete {
               case Success(x) => {
                 println("-----------------"+x)
-                database.save(x.toString,counter)
+                database.save(x.toString)
               }
 
               case Failure(_) => sys.error("error")

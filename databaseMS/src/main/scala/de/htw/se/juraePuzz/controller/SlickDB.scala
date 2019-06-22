@@ -37,7 +37,7 @@ class SlickDB extends DatabaseInterface {
       json
   }
 
-  override def save(gridJson: String,counter:Int): Unit = {
+  override def save(gridJson: String): Unit = {
 
       println("-------------------------------- save -------------------------------")
       val setup = DBIO.seq(

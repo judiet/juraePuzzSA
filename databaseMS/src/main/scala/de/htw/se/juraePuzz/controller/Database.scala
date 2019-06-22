@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.util.Timeout
 import redis.RedisClient
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.util.{Failure, Properties, Success}
 
@@ -19,28 +19,12 @@ class Database extends DatabaseInterface {
 
   val client = RedisClient(HOST, PORT.toInt)
 
-  override def load(counter:Int): String = {
-    var finalresponse = ""
-    var done: Boolean = false
+  override def load(): String = {
     val response = client.get("data")
-    response.onComplete {
-      case Success(x) => {
-        finalresponse = x.get.decodeString("UTF-8")
-        println("response_______:" + finalresponse)
-
-
-      }
-      case Failure(_) => {
-        finalresponse = "error"
-
-
-      }
-    }
-    Thread.sleep(500)
-    finalresponse
+    Await.result(response,Duration.Inf).get.decodeString("UTF-8")
   }
 
-  override def save(gridJson: String,counter:Int): Unit = {
+  override def save(gridJson: String): Unit = {
     client.set("data", gridJson)
   }
 }
